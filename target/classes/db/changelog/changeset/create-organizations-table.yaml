@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-organizations
+      author: Danil
+      changes:
+        - createTable:
+            tableName: Organizations
+            columns:
+              - column:
+                  name: id_organization
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: organization_Rating
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name_organization
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: description_organization
+                  type: varchar(200)
+                  constraints:
+                    nullable: false

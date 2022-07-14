@@ -1,0 +1,249 @@
+databaseChangeLog:
+  - changeSet:
+      id: insertRole1
+      author: Danil
+      changes:
+        - insert:
+            columns:
+              - column:
+                  name: id_role
+                  value: 1
+              - column:
+                  name: name_role
+                  value: ADMIN
+            tableName: roles
+
+  - changeSet:
+      id: insertRole2
+      author: Danil
+      changes:
+        - insert:
+            columns:
+              - column:
+                  name: id_role
+                  value: 2
+              - column:
+                  name: name_role
+                  value: USER
+            tableName: roles
+
+  - changeSet:
+      id: insertUser1
+      author: Danil
+      changes:
+        - insert:
+            columns:
+              - column:
+                  name: user_name
+                  value: danil
+              - column:
+                  name: password
+                  value: $2a$12$f5Ckq7.5jyYh5f0vOXtzdeg52tZyZ9HOQnyDPyHTwwVP2xbCD3rXa
+              - column:
+                  name: user_email
+                  value: danil@email.ru
+              - column:
+                  name: date_of_employment
+                  value: '2020-06-26'
+            tableName: users
+
+  - changeSet:
+      id: insertUsersRoles1
+      author: Danil
+      changes:
+        - insert:
+            columns:
+              - column:
+                  name: users_id
+                  value: 1
+              - column:
+                  name: roles_id
+                  value: 2
+            tableName: users_roles
+
+  - changeSet:
+      id: insertUser2
+      author: Danil
+      changes:
+        - insert:
+            columns:
+              - column:
+                  name: user_name
+                  value: anton
+              - column:
+                  name: password
+                  value: $2a$12$.eBZbBRpaRDKmFmp8paSpOlo9pvK.X.K7Xy2F.tWSwZZBKbjSSjYq
+              - column:
+                  name: user_email
+                  value: anton@email.ru
+              - column:
+                  name: date_of_employment
+                  value: '2020-06-26'
+            tableName: users
+
+  - changeSet:
+      id: insertUsersRoles2
+      author: Danil
+      changes:
+        - insert:
+            columns:
+              - column:
+                  name: users_id
+                  value: 2
+              - column:
+                  name: roles_id
+                  value: 1
+            tableName: users_roles
+
+  - changeSet:
+      id: insertUser3
+      author: Danil
+      changes:
+        - insert:
+            columns:
+              - column:
+                  name: user_name
+                  value: igor
+              - column:
+                  name: password
+                  value: $2a$12$n2SnnD5mqWAjkD7ytl6bu.y2JJWnMTq8prVHU1W7ArQxFzWtf9bDW
+              - column:
+                  name: user_email
+                  value: igor@email.ru
+              - column:
+                  name: date_of_employment
+                  value: '2020-06-26'
+            tableName: users
+
+  - changeSet:
+      id: insertUsersRoles3
+      author: Danil
+      changes:
+        - insert:
+            columns:
+              - column:
+                  name: users_id
+                  value: 3
+              - column:
+                  name: roles_id
+                  value: 1
+            tableName: users_roles
+
+  - changeSet:
+      id: insertOrganizations1
+      author: Danil
+      changes:
+        - insert:
+            columns:
+              - column:
+                  name: organization_rating
+                  value: 3
+              - column:
+                  name: name_organization
+                  value: Belgorod-zavod
+              - column:
+                  name: description_organization
+                  value: opisanie Zavoda
+            tableName: organizations
+
+  - changeSet:
+      id: insertOrganizations2
+      author: Danil
+      changes:
+        - insert:
+            columns:
+              - column:
+                  name: organization_rating
+                  value: 6
+              - column:
+                  name: name_organization
+                  value: Voronezh-zavod
+              - column:
+                  name: description_organization
+                  value: opisanie Zavoda
+            tableName: organizations
+
+  - changeSet:
+      id: insertEmployees1
+      author: Danil
+      changes:
+        - insert:
+            columns:
+              - column:
+                  name: name_employee
+                  value: ivan
+              - column:
+                  name: surname_employee
+                  value: ivan
+              - column:
+                  name: patronymic_employee
+                  value: ivano
+              - column:
+                  name: job_title
+                  value: engineer
+              - column:
+                  name: data_of_employment
+                  value: '2020-06-26'
+              - column:
+                  name: organization_id
+                  value: 1
+
+            tableName: employees
+
+  - changeSet:
+      id: insertEmployees2
+      author: Danil
+      changes:
+        - insert:
+            columns:
+              - column:
+                  name: name_employee
+                  value: oleg
+              - column:
+                  name: surname_employee
+                  value: oleg
+              - column:
+                  name: patronymic_employee
+                  value: oleg
+              - column:
+                  name: job_title
+                  value: engineer
+              - column:
+                  name: data_of_employment
+                  value: '2000-06-26'
+              - column:
+                  name: organization_id
+                  value: 2
+
+            tableName: employees
+
+  - changeSet:
+      id: insertEmployees3
+      author: Danil
+      changes:
+        - insert:
+            columns:
+              - column:
+                  name: name_employee
+                  value: nikita
+              - column:
+                  name: surname_employee
+                  value: nikita
+              - column:
+                  name: patronymic_employee
+                  value: nikita
+              - column:
+                  name: job_title
+                  value: engineer
+              - column:
+                  name: data_of_employment
+                  value: '2022-06-26'
+              - column:
+                  name: organization_id
+                  value: 2
+
+            tableName: employees
+
+
+
+
