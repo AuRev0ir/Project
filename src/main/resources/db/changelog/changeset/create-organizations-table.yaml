@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: create-organizations
+      id: createOrganizations1
       author: Danil
       changes:
         - createTable:

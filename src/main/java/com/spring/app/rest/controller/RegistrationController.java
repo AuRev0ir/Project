@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,8 +51,8 @@ public class RegistrationController {
                     content = {@Content(schema = @Schema())})
     })
     @PostMapping("/userRegistration")
-    public String addNewUser (@RequestBody FormRegistration formRegistration){
-        return userDetailService.newUser(formRegistration);
+    public ResponseEntity<String> addNewUser (@RequestBody FormRegistration formRegistration){
+        return ResponseEntity.ok(userDetailService.newUser(formRegistration));
     }
 
 
@@ -65,8 +66,8 @@ public class RegistrationController {
 
     @Hidden
     @DeleteMapping("/users")
-    public String deleteUser(@RequestParam String nameDeleteUser){
-        return userDetailService.deleteUser(nameDeleteUser);
+    public ResponseEntity<String> deleteUser(@RequestParam String nameDeleteUser){
+        return ResponseEntity.ok(userDetailService.deleteUser(nameDeleteUser));
     }
 
     @Hidden
@@ -78,16 +79,16 @@ public class RegistrationController {
 
     @Hidden
     @PatchMapping("/users/addRole")
-    public String addRoleUser(@RequestParam String nameUser,
+    public ResponseEntity<String> addRoleUser(@RequestParam String nameUser,
                               @RequestParam String newNameRole){
-        return userDetailService.addRoleUser(newNameRole, nameUser);
+        return ResponseEntity.ok(userDetailService.addRoleUser(newNameRole, nameUser));
     }
 
     @Hidden
     @PatchMapping ("users/deleteRole")
-    public String removeRoleUser (@RequestParam String nameUser,
+    public ResponseEntity<String> removeRoleUser (@RequestParam String nameUser,
                                   @RequestParam String deleteNameRole){
-        return userDetailService.removeRoleUser(deleteNameRole, nameUser);
+        return ResponseEntity.ok(userDetailService.removeRoleUser(deleteNameRole, nameUser));
     }
     @Hidden
     @GetMapping("/users/userByName")

@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -97,8 +98,8 @@ public class OrganizationController {
                     content = {@Content(schema = @Schema())})
     })
     @DeleteMapping ("/organizations/{idOrganization}")
-    public String deleteOrganization(@PathVariable("idOrganization") Long idOrganization){
-        return organizationService.deleteOrganization(idOrganization);
+    public ResponseEntity<String> deleteOrganization(@PathVariable("idOrganization") Long idOrganization){
+        return ResponseEntity.ok(organizationService.deleteOrganization(idOrganization));
     }
 
     @Operation(summary = "List of all organizations by rating")

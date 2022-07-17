@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: create-users
+      id: createUsers1
       author: Danil
       changes:
         - createTable:
@@ -11,13 +11,17 @@ databaseChangeLog:
                   name: id_user
                   type: bigint
                   autoIncrement: true
+                  constraints:
+                    primaryKey: true
 
               - column:
                   name: user_name
                   type: varchar(200)
                   constraints:
+                    unique: true
+                    uniqueConstraintName: UniqueNameUser
                     nullable: false
-                    unique: false
+
 
               - column:
                   name: password

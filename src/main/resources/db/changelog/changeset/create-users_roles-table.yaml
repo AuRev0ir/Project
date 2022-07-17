@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: create users_roles
+      id: createUserRoles1
       author: Danil
       changes:
         - createTable:
@@ -11,16 +11,43 @@ databaseChangeLog:
                   type: bigint
                   constraints:
                     nullable: false
-                    foreignKeyName: us
 
               - column:
                   name: roles_id
                   type: bigint
                   constraints:
                     nullable: false
-                    foreignKeyName: rol
 
-#    не совсем понял как тут сделать ограничения
+  - changeSet:
+      id: createUsersRoles2
+      author: Danil
+      changes:
+        - addPrimaryKey:
+            columnNames: users_id, roles_id
+            tableName: users_roles
+
+
+  - changeSet:
+      id: createUsersRoles3
+      author: Danil
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: users_roles
+            baseColumnNames: users_id
+            referencedTableName: users
+            referencedColumnNames: id_user
+            constraintName: FKRole
+
+  - changeSet:
+      id: createUsersRoles4
+      author: Danil
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: users_roles
+            baseColumnNames: roles_id
+            referencedTableName: roles
+            referencedColumnNames: id_role
+            constraintName: FKUser
 
 
 

@@ -6,14 +6,14 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
-@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "user_name"))
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUser;
 
-    @Column(name = "user_name")
+    @Column(name = "user_name", unique = true)
     private String nameUser;
 
     @Column(name = "password")

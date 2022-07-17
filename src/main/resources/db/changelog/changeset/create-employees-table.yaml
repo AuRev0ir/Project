@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: create-employees
+      id: createEmployees1
       author: Danil
       changes:
         - createTable:
@@ -48,4 +48,14 @@ databaseChangeLog:
                   type: bigint
                   constraints:
                     nullable: false
-                    foreignKeyName: emp
+
+  - changeSet:
+      id: createEmployees2
+      author: Danil
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: employees
+            baseColumnNames: organization_id
+            referencedTableName: organizations
+            referencedColumnNames: id_organization
+            constraintName: FKEmployee
