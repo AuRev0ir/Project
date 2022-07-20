@@ -36,6 +36,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/v3/api-docs").permitAll()
                 .antMatchers(HttpMethod.PATCH,"/organizations/{idOrganization}")
                 .hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/organizations/{idOrganization}")
@@ -44,7 +46,8 @@ public class WebSecurityConfig {
                 .hasAuthority("USER")
                 .antMatchers(HttpMethod.POST, "/organizations/{idOrganization}/employees")
                 .hasAuthority("USER")
-                .antMatchers("/apiAdmin/**").hasAuthority("ADMIN")    //Не знаю, как будет правильней, но пусть регестрируют и дают роли только Админы
+                .antMatchers(HttpMethod.POST,"/apiAdmin/userRegistration").not().fullyAuthenticated()    //Не знаю, как будет правильней, но пусть регестрируют и дают роли только Админы
+                .antMatchers("/apiAdmin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

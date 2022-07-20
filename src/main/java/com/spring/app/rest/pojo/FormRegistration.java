@@ -15,8 +15,6 @@ public class FormRegistration {
 
     private String passwordNewUser;
 
-    private Set<String> roleNewUser;
-
     public FormRegistration(String nameNewUser,
                             String emailNewUser,
                             LocalDate dateOfEmploymentNewUser,
@@ -26,7 +24,6 @@ public class FormRegistration {
         this.emailNewUser = emailNewUser;
         this.dateOfEmploymentNewUser = dateOfEmploymentNewUser;
         this.passwordNewUser = passwordNewUser;
-        this.roleNewUser = roleNewUser;
     }
 
 
@@ -47,9 +44,6 @@ public class FormRegistration {
         return passwordNewUser;
     }
 
-    public Set<String> getRolesNewUser() {
-        return roleNewUser;
-    }
 
     //set
 
@@ -69,7 +63,4 @@ public class FormRegistration {
         this.passwordNewUser = passwordNewUser;
     }
 
-    public void setRoleNewUser(Set<String> roleNewUser) {
-        this.roleNewUser = roleNewUser;
-    }
 }

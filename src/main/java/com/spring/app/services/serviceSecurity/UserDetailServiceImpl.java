@@ -48,18 +48,15 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     public String newUser(FormRegistration formRegistration) {
 
         Set<Role>rolesNewUser = new HashSet<>();
+        Role roleNewUser = roleRepository.findByNameRole("USER").orElseThrow(RepositoryException::new);
+        rolesNewUser.add(roleNewUser);
 
-        Set<Role> roles = roleRepository.findAll();
+        List<User> usersList = userRepository.findAll();
 
-        for (Role role : roles) {
-            for (String roleForm : formRegistration.getRolesNewUser()) {
-                if (Objects.equals(role.getNameRole(),roleForm)){
-                    rolesNewUser.add(role);
-                }
+        for (User user : usersList) {
+            if (Objects.equals(user.getNameUser(), formRegistration.getNameNewUser())){
+                throw new CreateException();
             }
-        }
-        if (rolesNewUser.isEmpty()){
-            throw new CreateException();                                    //Роль обязательно
         }
 
         User newUser = new User(
