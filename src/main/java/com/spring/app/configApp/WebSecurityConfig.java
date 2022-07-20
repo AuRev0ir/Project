@@ -46,7 +46,7 @@ public class WebSecurityConfig {
                 .hasAuthority("USER")
                 .antMatchers(HttpMethod.POST, "/organizations/{idOrganization}/employees")
                 .hasAuthority("USER")
-                .antMatchers(HttpMethod.POST,"/apiAdmin/userRegistration").not().fullyAuthenticated()    //Не знаю, как будет правильней, но пусть регестрируют и дают роли только Админы
+                .antMatchers(HttpMethod.POST,"/apiAdmin/userRegistration").not().fullyAuthenticated()
                 .antMatchers("/apiAdmin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and()
