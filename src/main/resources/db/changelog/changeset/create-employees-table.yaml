@@ -4,7 +4,7 @@ databaseChangeLog:
       author: Danil
       changes:
         - createTable:
-            tableName: Employees
+            tableName: employees
             columns:
               - column:
                   name: id_employee
