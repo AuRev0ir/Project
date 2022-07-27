@@ -1,5 +1,6 @@
 package com.spring.app.configApp;
 
+import com.spring.app.configApp.basic.MyBasicAuthenticationEntryPoint;
 import com.spring.app.services.serviceSecurity.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,8 @@ public class WebSecurityConfig {
     @Autowired
     private UserDetailServiceImpl userDetailService;
 
+    @Autowired
+    private MyBasicAuthenticationEntryPoint authenticationEntryPoint;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -42,16 +45,11 @@ public class WebSecurityConfig {
                 .hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/organizations/{idOrganization}")
                 .hasAuthority("ADMIN")
-                .antMatchers(HttpMethod.PATCH,"/organizations/{idOrganization}/employees/{idEmployee}")
-                .hasAuthority("USER")
-                .antMatchers(HttpMethod.POST, "/organizations/{idOrganization}/employees")
-                .hasAuthority("USER")
                 .antMatchers(HttpMethod.POST,"/apiAdmin/userRegistration").not().fullyAuthenticated()
                 .antMatchers("/apiAdmin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .defaultSuccessUrl("/api/v1/organizations");    //стартовая страница
+                .httpBasic().authenticationEntryPoint(authenticationEntryPoint);
 
         return http.build();
     }
