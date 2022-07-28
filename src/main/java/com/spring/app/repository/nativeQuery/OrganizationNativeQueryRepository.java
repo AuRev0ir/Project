@@ -9,6 +9,6 @@ import java.util.List;
 public interface OrganizationNativeQueryRepository extends CrudRepository<Organization,Long> {
 
     @Query(nativeQuery = true,
-            value = "SELECT * FROM Organizations s ORDER BY organization_Rating DESC")
+            value = "SELECT * FROM Organizations s ORDER BY organization_rating DESC")
     List<Organization> sortOrganizationsByRating();
 }

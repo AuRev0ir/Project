@@ -1,51 +1,50 @@
 package com.spring.app.rest.dto.organizationDto;
 
+import com.spring.app.domain.Employee;
 import com.spring.app.domain.Organization;
 
 public class OrganizationDto {
 
-    private Long id;
-    private Long ratingOrganization;
+    private String name;
 
-    private String nameOrganization;
+    private String description;
 
-    private String descriptionOrganization;
+    private Long rating;
 
 
-    public OrganizationDto(Long id,
-                           Long ratingOrganization,
-                           String nameOrganization,
-                           String descriptionOrganization) {
-        this.ratingOrganization = ratingOrganization;
-        this.nameOrganization = nameOrganization;
-        this.descriptionOrganization = descriptionOrganization;
-        this.id = id;
+    public OrganizationDto(Long rating,
+                           String name,
+                           String description) {
+        this.rating = rating;
+        this.name = name;
+        this.description = description;
     }
 
     public static OrganizationDto toDto (Organization organization){
         return new OrganizationDto(
-                organization.getIdOrganization(),
-                organization.getRatingOrganization(),
-                organization.getNameOrganization(),
-                organization.getDescriptionOrganization());
+                organization.getRating(),
+                organization.getName(),
+                organization.getDescription());
+    }
+
+    public static Organization toDomainObject (OrganizationDto dto) {
+        return new Organization(
+                dto.getName(),
+                dto.getDescription(),
+                dto.getRating());
     }
 
     //get
 
-
-    public Long getId() {
-        return id;
+    public Long getRating() {
+        return rating;
     }
 
-    public Long getRatingOrganization() {
-        return ratingOrganization;
+    public String getName() {
+        return name;
     }
 
-    public String getNameOrganization() {
-        return nameOrganization;
-    }
-
-    public String getDescriptionOrganization() {
-        return descriptionOrganization;
+    public String getDescription() {
+        return description;
     }
 }

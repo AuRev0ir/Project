@@ -8,8 +8,7 @@ import com.spring.app.repository.dataJpa.EmployeeRepository;
 import com.spring.app.repository.dataJpa.OrganizationRepository;
 import com.spring.app.repository.jpql.JpqlQueryRepository;
 import com.spring.app.rest.dto.employeeDto.EmployeeDto;
-import com.spring.app.rest.dto.employeeDto.EmployeeIdDto;
-import com.spring.app.rest.pojo.FormEmployee;
+import com.spring.app.rest.dto.employeeDto.EmployeeDtoOnlyId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,28 +31,28 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeDto editingEmployee(FormEmployee formEmployee, Long idOrganization, Long idEmployee) {
+    public EmployeeDto updateEmployee(EmployeeDto dto, Long idOrganization, Long idEmployee) {
 
         boolean isSuccessfully = false;
 
         Employee editingEmployee = employeeRepository.findById(idEmployee).orElseThrow(RepositoryException::new);
         List<Employee> employeeList = jpqlQueryRepository.sortedEmployees(idOrganization);
         for (Employee employee : employeeList) {
-            if (Objects.equals(employee.getIdEmployee(),idEmployee)) {
-                if (!Objects.equals(employee.getNameEmployee(),formEmployee.getNameEmployee())){
-                    editingEmployee.setNameEmployee(formEmployee.getNameEmployee());
+            if (Objects.equals(employee.getId(),idEmployee)) {
+                if (!Objects.equals(employee.getFirstName(),dto.getFirstName())){
+                    editingEmployee.setFirstName(dto.getFirstName());
                 }
-                if (!Objects.equals(employee.getSurnameEmployee(),formEmployee.getSurnameEmployee())){
-                    editingEmployee.setSurnameEmployee(formEmployee.getSurnameEmployee());
+                if (!Objects.equals(employee.getLastName(), dto.getLastName())){
+                    editingEmployee.setLastName(dto.getLastName());
                 }
-                if(!Objects.equals(employee.getPatronymicEmployee(),formEmployee.getPatronymicEmployee())){
-                    editingEmployee.setPatronymicEmployee(formEmployee.getPatronymicEmployee());
+                if(!Objects.equals(employee.getThirdName(),dto.getThirdName())){
+                    editingEmployee.setThirdName(dto.getThirdName());
                 }
-                if(!Objects.equals(employee.getJobTitle(),formEmployee.getJobTitle())){
-                    editingEmployee.setJobTitle(formEmployee.getJobTitle());
+                if(!Objects.equals(employee.getJobTitle(),dto.getJobTitle())){
+                    editingEmployee.setJobTitle(dto.getJobTitle());
                 }
-                if(!Objects.equals(employee.getDateOfEmployment(),formEmployee.getDateOfEmployment())){
-                    editingEmployee.setDateOfEmployment(formEmployee.getDateOfEmployment());
+                if(!Objects.equals(employee.getHireDate(),dto.getHireDate())){
+                    editingEmployee.setHireDate(dto.getHireDate());
                 }
 
                 isSuccessfully = true;
@@ -68,21 +67,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeIdDto addEmployee(FormEmployee formEmployee, Long idOrganization) {
+    public EmployeeDtoOnlyId addEmployee(EmployeeDto dto, Long idOrganization) {
         Organization organizationById = organizationRepository.findById(idOrganization)
                 .orElseThrow(RepositoryException::new);
-        Employee newEmployee = new Employee(
-                formEmployee.getNameEmployee(),
-                formEmployee.getPatronymicEmployee(),
-                formEmployee.getSurnameEmployee(),
-                formEmployee.getJobTitle(),
-                formEmployee.getDateOfEmployment(), organizationById);
+        Employee newEmployee = EmployeeDto.toDomainObject(dto, organizationById);
         employeeRepository.save(newEmployee);
-        return EmployeeIdDto.toDto(newEmployee);
+        return EmployeeDtoOnlyId.toDto(newEmployee);
     }
 
     @Override
-    public List<EmployeeDto> employeeList(Long idOrganization) {
+    public List<EmployeeDto> getEmployees(Long idOrganization) {
         return jpqlQueryRepository
                 .sortedEmployees(idOrganization)
                 .stream()
@@ -91,11 +85,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public String deleteEmployee(Long idOrganization, Long idEmployee) {
+    public String removeEmployee(Long idOrganization, Long idEmployee) {
         boolean isSuccessfully = false;
         List<Employee> employeeList = jpqlQueryRepository.sortedEmployees(idOrganization);
         for (Employee employee : employeeList) {
-            if(Objects.equals(employee.getIdEmployee(), idEmployee)){
+            if(Objects.equals(employee.getId(), idEmployee)){
                 jpqlQueryRepository.deleteEmployeeById(idEmployee);
                 isSuccessfully = true;
             }

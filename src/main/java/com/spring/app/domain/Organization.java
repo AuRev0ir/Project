@@ -10,56 +10,57 @@ public class Organization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idOrganization;
+    @Column(name = "id_organization")
+    private long id;
 
     @Column(name = "organization_Rating", nullable = false)
-    private long ratingOrganization;
+    private long rating;
 
 
-    @Column(name = "name_organization", nullable = false) // позже постаить уникальность
-    private String nameOrganization;
+    @Column(name = "name_organization", nullable = false)
+    private String name;
 
 
     @Column(name = "description_organization")
-    private String descriptionOrganization;
+    private String description;
 
     public Organization() {}
 
-    public Organization(String nameOrganization, String descriptionOrganization,
-                        Long ratingOrganization) {
-        this.nameOrganization = nameOrganization;
-        this.descriptionOrganization = descriptionOrganization;
-        this.ratingOrganization = ratingOrganization;
+    public Organization(String name, String description,
+                        Long rating) {
+        this.name = name;
+        this.description = description;
+        this.rating = rating;
     }
 
 
     //get
-    public long getIdOrganization() {
-        return idOrganization;
+    public long getId() {
+        return id;
     }
 
-    public String getNameOrganization() {
-        return nameOrganization;
+    public String getName() {
+        return name;
     }
 
-    public String getDescriptionOrganization() {
-        return descriptionOrganization;
+    public String getDescription() {
+        return description;
     }
 
-    public long getRatingOrganization() {
-        return ratingOrganization;
+    public long getRating() {
+        return rating;
     }
 
     //set
-    public void setNameOrganization(String nameOrganization) {
-        this.nameOrganization = nameOrganization;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setDescriptionOrganization(String descriptionOrganization) {
-        this.descriptionOrganization = descriptionOrganization;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setRatingOrganization(long ratingOrganization) {
-        this.ratingOrganization = ratingOrganization;
+    public void setRating(long rating) {
+        this.rating = rating;
     }
 }

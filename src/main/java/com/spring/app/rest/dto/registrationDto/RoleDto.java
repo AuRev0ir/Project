@@ -10,16 +10,11 @@ public class RoleDto {
     }
 
     public static RoleDto toDto (Role role){
-        return new RoleDto(role.getNameRole());
+        return new RoleDto(role.getName());
     }
 
     //get
     public String getRole() {
         return role;
-    }
-
-    //set
-    public void setRole(String role) {
-        this.role = role;
     }
 }

@@ -1,6 +1,8 @@
 package com.spring.app.rest.dto.registrationDto;
 
+import com.spring.app.domain.Organization;
 import com.spring.app.domain.User;
+import com.spring.app.rest.dto.organizationDto.OrganizationDto;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -29,9 +31,9 @@ public class UserDto {
 
     public static UserDto toDto(User user){
         return new UserDto(
-                user.getNameUser(),
-                user.getEmailUser(),
-                user.getDateOfEmployment(),
+                user.getName(),
+                user.getEmail(),
+                user.getRegistrationDate(),
                 user.getRoles().stream().map(role -> RoleDto.toDto(role)).collect(Collectors.toSet()));
     }
 
@@ -53,21 +55,4 @@ public class UserDto {
         return roles;
     }
 
-    //set
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setRegistrationDate(LocalDate registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
-    public void setRoles(Set<RoleDto> roles) {
-        this.roles = roles;
-    }
 }

@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,32 +37,32 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepository.findByNameUser(username)
+        User user = userRepository.findByName(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
         return UserDetailsImpl.buildUserDetails(user);
     }
 
 
     @Override
-    public String newUser(FormRegistration formRegistration) {
+    public String addUser(FormRegistration formRegistration) {
 
         Set<Role>rolesNewUser = new HashSet<>();
-        Role roleNewUser = roleRepository.findByNameRole("USER").orElseThrow(RepositoryException::new);
+        Role roleNewUser = roleRepository.findByName("USER").orElseThrow(RepositoryException::new);
         rolesNewUser.add(roleNewUser);
 
         List<User> usersList = userRepository.findAll();
 
         for (User user : usersList) {
-            if (Objects.equals(user.getNameUser(), formRegistration.getNameNewUser())){
+            if (Objects.equals(user.getName(), formRegistration.getName())){
                 throw new CreateException();
             }
         }
 
         User newUser = new User(
-                formRegistration.getNameNewUser(),
-                bCryptPasswordEncoder.encode(formRegistration.getPasswordNewUser()),
-                formRegistration.getEmailNewUser(),
-                formRegistration.getDateOfEmploymentNewUser(),
+                formRegistration.getName(),
+                bCryptPasswordEncoder.encode(formRegistration.getPassword()),
+                formRegistration.getEmail(),
+                formRegistration.getRegistrationDate(),
                 rolesNewUser);
 
         userRepository.save(newUser);
@@ -72,7 +71,7 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public Set<RoleDto> allRoles() {
+    public Set<RoleDto> getRoles() {
         return roleRepository
                 .findAll()
                 .stream()
@@ -81,7 +80,7 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public List<UserDto> allUsers() {
+    public List<UserDto> getUsers() {
         return userRepository
                 .findAll()
                 .stream()
@@ -90,34 +89,34 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public UserDto userByName(String nameUser) {
-        User userByName = userRepository.findByNameUser(nameUser).orElseThrow(RepositoryException::new);
+    public UserDto getUserByName(String nameUser) {
+        User userByName = userRepository.findByName(nameUser).orElseThrow(RepositoryException::new);
         return UserDto.toDto(userByName);
     }
 
     @Override
-    public String deleteUser(String nameDeleteUser) {
-        User deleteUser = userRepository.findByNameUser(nameDeleteUser).orElseThrow(RepositoryException::new);
+    public String removeUser(String nameDeleteUser) {
+        User deleteUser = userRepository.findByName(nameDeleteUser).orElseThrow(RepositoryException::new);
         userRepository.delete(deleteUser);
         return "User: " + nameDeleteUser + " deleted successfully";
     }
 
     @Override
-    public String addRoleUser(String newNameRole, String nameUser) {
+    public String addUserRole(String newNameRole, String nameUser) {
 
         boolean isSuccessfully1 = true;
         boolean isSuccessfully2 = false;
 
         Set<Role> roles = roleRepository.findAll();
 
-        User user = userRepository.findByNameUser(nameUser).orElseThrow(RepositoryException::new);
+        User user = userRepository.findByName(nameUser).orElseThrow(RepositoryException::new);
 
         Set<Role> allRolesUser = user.getRoles();
 
         for (Role role : roles) {
-            if(Objects.equals(role.getNameRole(), newNameRole)){
+            if(Objects.equals(role.getName(), newNameRole)){
                 for (Role roleUser : allRolesUser) {
-                    if(Objects.equals(roleUser.getNameRole(),newNameRole)){
+                    if(Objects.equals(roleUser.getName(),newNameRole)){
                         isSuccessfully1 = false;
                     }
                 }
@@ -141,19 +140,19 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public String removeRoleUser(String deleteRole, String nameUser) {
+    public String removeUserRole(String deleteRole, String nameUser) {
 
         boolean isSuccessfully = false;
 
         Set<Role> roles = roleRepository.findAll();
-        User user = userRepository.findByNameUser(nameUser).orElseThrow(RepositoryException::new);
+        User user = userRepository.findByName(nameUser).orElseThrow(RepositoryException::new);
 
         Set<Role> allRolesUser = user.getRoles();
 
         for (Role role : roles) {
-            if(Objects.equals(role.getNameRole(), deleteRole)){
+            if(Objects.equals(role.getName(), deleteRole)){
                 for (Role userRole : allRolesUser) {
-                    if(Objects.equals(userRole.getNameRole(),deleteRole)){
+                    if(Objects.equals(userRole.getName(),deleteRole)){
                         allRolesUser.remove(userRole);
                         user.setRoles(allRolesUser);
                         System.out.println(allRolesUser);

@@ -9,19 +9,19 @@ import java.util.Set;
 
 public interface UserService {
 
-    String newUser (FormRegistration formRegistration);
+    String addUser(FormRegistration formRegistration);
 
-    Set<RoleDto> allRoles();
+    Set<RoleDto> getRoles();
 
-    List<UserDto> allUsers();
+    List<UserDto> getUsers();
 
-    UserDto userByName(String nameUser);
+    UserDto getUserByName(String nameUser);
 
-    String deleteUser(String nameDeleteUser);
+    String removeUser(String nameDeleteUser);
 
-    String addRoleUser(String newNameRole, String nameUser);
+    String addUserRole(String newNameRole, String nameUser);
 
-    String removeRoleUser(String deleteRole, String nameUser);
+    String removeUserRole(String deleteRole, String nameUser);
 
 
 }

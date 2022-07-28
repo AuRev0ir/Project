@@ -8,8 +8,7 @@ import com.spring.app.repository.dataJpa.OrganizationRepository;
 import com.spring.app.repository.jpql.JpqlQueryRepository;
 import com.spring.app.repository.nativeQuery.OrganizationNativeQueryRepository;
 import com.spring.app.rest.dto.organizationDto.OrganizationDto;
-import com.spring.app.rest.dto.organizationDto.OrganizationIdDto;
-import com.spring.app.rest.pojo.FormOrganization;
+import com.spring.app.rest.dto.organizationDto.OrganizationDtoOnlyId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,20 +31,20 @@ public class OrganizationServiceImpl implements OrganizationService{
     }
 
     @Override
-    public OrganizationDto editingOrganization(FormOrganization formOrganization , Long idOrganization) {
+    public OrganizationDto updateOrganization(OrganizationDto dto , Long idOrganization) {
 
 
         Organization editingOrganizations = organizationRepository.findById(idOrganization).orElseThrow(RepositoryException::new);
-        if(!Objects.equals(editingOrganizations.getNameOrganization(),formOrganization.getNameOrganization())){
-            editingOrganizations.setNameOrganization(formOrganization.getNameOrganization());
+        if(!Objects.equals(editingOrganizations.getName(),dto.getName())){
+            editingOrganizations.setName(dto.getName());
 
         }
-        if(!Objects.equals(editingOrganizations.getDescriptionOrganization(),formOrganization.getDescriptionOrganization())){
-            editingOrganizations.setDescriptionOrganization(formOrganization.getDescriptionOrganization());
+        if(!Objects.equals(editingOrganizations.getDescription(),dto.getDescription())){
+            editingOrganizations.setDescription(dto.getDescription());
 
         }
-        if(!Objects.equals(editingOrganizations.getRatingOrganization(),formOrganization.getRatingOrganization())){
-            editingOrganizations.setRatingOrganization(formOrganization.getRatingOrganization());
+        if(!Objects.equals(editingOrganizations.getRating(),dto.getRating())){
+            editingOrganizations.setRating(dto.getRating());
 
         }
         organizationRepository.save(editingOrganizations);
@@ -53,16 +52,13 @@ public class OrganizationServiceImpl implements OrganizationService{
     }
 
     @Override
-    public OrganizationIdDto addOrganization(FormOrganization formOrganization) {
-        Organization newOrganization = new Organization(
-                formOrganization.getNameOrganization(),
-                formOrganization.getDescriptionOrganization()
-                ,formOrganization.getRatingOrganization());
-        return OrganizationIdDto.toDto(organizationRepository.save(newOrganization));
+    public OrganizationDtoOnlyId addOrganization(OrganizationDto dto) {
+        Organization newOrganization = OrganizationDto.toDomainObject(dto);
+        return OrganizationDtoOnlyId.toDto(organizationRepository.save(newOrganization));
     }
 
     @Override
-    public List<OrganizationDto> organizationList() {
+    public List<OrganizationDto> getOrganizations() {
         return organizationNativeQueryRepository
                 .sortOrganizationsByRating()
                 .stream()
@@ -72,16 +68,16 @@ public class OrganizationServiceImpl implements OrganizationService{
     }
 
     @Override
-    public String deleteOrganization(Long idOrganization) {
+    public String removeOrganization(Long idOrganization) {
         boolean isSuccessfully = false;
 
         List <Employee> deleteEmployee = jpqlQueryRepository.sortedEmployees(idOrganization);
         List<Organization> organizations = organizationRepository.findAll();
 
         for (Organization organization : organizations) {
-            if(Objects.equals(organization.getIdOrganization(),idOrganization)){
+            if(Objects.equals(organization.getId(),idOrganization)){
                 for (Employee employee : deleteEmployee) {
-                    jpqlQueryRepository.deleteEmployeeById(employee.getIdEmployee());
+                    jpqlQueryRepository.deleteEmployeeById(employee.getId());
                 }
 
                 jpqlQueryRepository.deleteOrganizationById(idOrganization);

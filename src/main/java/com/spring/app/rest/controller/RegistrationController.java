@@ -52,7 +52,7 @@ public class RegistrationController {
     })
     @PostMapping("/userRegistration")
     public ResponseEntity<String> addNewUser (@RequestBody FormRegistration formRegistration){
-        return ResponseEntity.ok(userDetailService.newUser(formRegistration));
+        return ResponseEntity.ok(userDetailService.addUser(formRegistration));
     }
 
 
@@ -61,19 +61,19 @@ public class RegistrationController {
     @Hidden
     @GetMapping("/users")
     public List<UserDto> allUsers(){
-        return userDetailService.allUsers();
+        return userDetailService.getUsers();
     }
 
     @Hidden
     @DeleteMapping("/users")
     public ResponseEntity<String> deleteUser(@RequestParam String nameDeleteUser){
-        return ResponseEntity.ok(userDetailService.deleteUser(nameDeleteUser));
+        return ResponseEntity.ok(userDetailService.removeUser(nameDeleteUser));
     }
 
     @Hidden
     @GetMapping("/roles")
     public Set<RoleDto> allRoles (){
-        return userDetailService.allRoles();
+        return userDetailService.getRoles();
     }
 
 
@@ -81,19 +81,19 @@ public class RegistrationController {
     @PatchMapping("/users/addRole")
     public ResponseEntity<String> addRoleUser(@RequestParam String nameUser,
                               @RequestParam String newNameRole){
-        return ResponseEntity.ok(userDetailService.addRoleUser(newNameRole, nameUser));
+        return ResponseEntity.ok(userDetailService.addUserRole(newNameRole, nameUser));
     }
 
     @Hidden
     @PatchMapping ("users/deleteRole")
     public ResponseEntity<String> removeRoleUser (@RequestParam String nameUser,
                                   @RequestParam String deleteNameRole){
-        return ResponseEntity.ok(userDetailService.removeRoleUser(deleteNameRole, nameUser));
+        return ResponseEntity.ok(userDetailService.removeUserRole(deleteNameRole, nameUser));
     }
     @Hidden
     @GetMapping("/users/userByName")
     public UserDto userByName(@RequestParam String userName){
-        return userDetailService.userByName(userName);
+        return userDetailService.getUserByName(userName);
     }
 
 

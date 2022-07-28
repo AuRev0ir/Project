@@ -10,22 +10,23 @@ public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idEmployee;
+    @Column(name = "id_employee" )
+    private long id;
 
     @Column(name = "name_employee", nullable = false)
-    private String nameEmployee;
+    private String firstName;
 
     @Column(name = "surname_employee", nullable = false )
-    private String surnameEmployee;
+    private String lastName;
 
     @Column(name = "patronymic_employee", nullable = false)
-    private String patronymicEmployee;
+    private String thirdName;
 
     @Column(name = "job_title", nullable = false)
     private String jobTitle;
 
     @Column(name = "data_of_employment", nullable = false)
-    private LocalDate dateOfEmployment;
+    private LocalDate hireDate;
 
     @ManyToOne(targetEntity = Organization.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "organization_id", nullable = false)
@@ -34,43 +35,46 @@ public class Employee {
 
     public Employee() {}
 
-    public Employee(String nameEmployee, String surnameEmployee,
-                    String patronymicEmployee, String jobTitle,
-                    LocalDate dateOfEmployment, Organization organization) {
+    public Employee(String firstName,
+                    String lastName,
+                    String thirdName,
+                    String jobTitle,
+                    LocalDate hireDate,
+                    Organization organization) {
 
-        this.nameEmployee = nameEmployee;
-        this.surnameEmployee = surnameEmployee;
-        this.patronymicEmployee = patronymicEmployee;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.thirdName = thirdName;
         this.jobTitle = jobTitle;
-        this.dateOfEmployment = dateOfEmployment;
+        this.hireDate = hireDate;
         this.organization = organization;
     }
 
 
 
     //get
-    public long getIdEmployee() {
-        return idEmployee;
+    public long getId() {
+        return id;
     }
 
-    public String getNameEmployee() {
-        return nameEmployee;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getSurnameEmployee() {
-        return surnameEmployee;
+    public String getLastName() {
+        return lastName;
     }
 
-    public String getPatronymicEmployee() {
-        return patronymicEmployee;
+    public String getThirdName() {
+        return thirdName;
     }
 
     public String getJobTitle() {
         return jobTitle;
     }
 
-    public LocalDate getDateOfEmployment() {
-        return dateOfEmployment;
+    public LocalDate getHireDate() {
+        return hireDate;
     }
 
     public Organization getOrganization() {
@@ -80,23 +84,23 @@ public class Employee {
     //set
 
 
-    public void setNameEmployee(String nameEmployee) {
-        this.nameEmployee = nameEmployee;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public void setSurnameEmployee(String surnameEmployee) {
-        this.surnameEmployee = surnameEmployee;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public void setPatronymicEmployee(String patronymicEmployee) {
-        this.patronymicEmployee = patronymicEmployee;
+    public void setThirdName(String thirdName) {
+        this.thirdName = thirdName;
     }
 
     public void setJobTitle(String jobTitle) {
         this.jobTitle = jobTitle;
     }
 
-    public void setDateOfEmployment(LocalDate dateOfEmployment) {
-        this.dateOfEmployment = dateOfEmployment;
+    public void setHireDate(LocalDate hireDate) {
+        this.hireDate = hireDate;
     }
 }

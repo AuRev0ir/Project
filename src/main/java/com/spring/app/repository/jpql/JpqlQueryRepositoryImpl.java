@@ -22,8 +22,8 @@ public class JpqlQueryRepositoryImpl implements JpqlQueryRepository {
     public List<Employee> sortedEmployees(Long idOrganization) {
 
         String queryString = "SELECT s FROM Employee s " +
-                "WHERE  s.organization.idOrganization = :idOrganization " +
-                "ORDER BY s.dateOfEmployment ASC";
+                "WHERE  s.organization.id = :idOrganization " +
+                "ORDER BY s.hireDate ASC";
 
         TypedQuery<Employee> query = entityManager.createQuery(queryString, Employee.class);
         query.setParameter("idOrganization",idOrganization);
@@ -39,7 +39,7 @@ public class JpqlQueryRepositoryImpl implements JpqlQueryRepository {
     public void deleteEmployeeById(Long idEmployee) {
 
         String queryString = "DELETE FROM Employee s " +
-                "WHERE s.idEmployee = :idEmployee ";
+                "WHERE s.id = :idEmployee ";
 
         Query query = entityManager.createQuery(queryString);
         query.setParameter("idEmployee", idEmployee);
@@ -51,7 +51,7 @@ public class JpqlQueryRepositoryImpl implements JpqlQueryRepository {
     public void deleteOrganizationById(Long idOrganization) {
 
         String queryString = "DELETE FROM Organization s " +
-                "WHERE s.idOrganization = :idOrganization ";
+                "WHERE s.id = :idOrganization ";
 
         Query query = entityManager.createQuery(queryString);
         query.setParameter("idOrganization", idOrganization);

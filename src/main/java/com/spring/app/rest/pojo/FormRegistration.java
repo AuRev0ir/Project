@@ -1,66 +1,46 @@
 package com.spring.app.rest.pojo;
 
-import com.spring.app.domain.Role;
-
 import java.time.LocalDate;
 import java.util.Set;
 
 public class FormRegistration {
 
-    private String nameNewUser;
+    private String name;
 
-    private String emailNewUser;
+    private String email;
 
-    private LocalDate dateOfEmploymentNewUser;
+    private LocalDate registrationDate;
 
-    private String passwordNewUser;
+    private String password;
 
-    public FormRegistration(String nameNewUser,
-                            String emailNewUser,
-                            LocalDate dateOfEmploymentNewUser,
-                            String passwordNewUser,
+    public FormRegistration(String name,
+                            String email,
+                            LocalDate registrationDate,
+                            String password,
                             Set<String> roleNewUser) {
-        this.nameNewUser = nameNewUser;
-        this.emailNewUser = emailNewUser;
-        this.dateOfEmploymentNewUser = dateOfEmploymentNewUser;
-        this.passwordNewUser = passwordNewUser;
+        this.name = name;
+        this.email = email;
+        this.registrationDate = registrationDate;
+        this.password = password;
     }
 
 
     //get
-    public String getNameNewUser() {
-        return nameNewUser;
+    public String getName() {
+        return name;
     }
 
-    public String getEmailNewUser() {
-        return emailNewUser;
+    public String getEmail() {
+        return email;
     }
 
-    public LocalDate getDateOfEmploymentNewUser() {
-        return dateOfEmploymentNewUser;
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
     }
 
-    public String getPasswordNewUser() {
-        return passwordNewUser;
+    public String getPassword() {
+        return password;
     }
 
-
-    //set
-
-    public void setNameNewUser(String nameNewUser) {
-        this.nameNewUser = nameNewUser;
-    }
-
-    public void setEmailNewUser(String emailNewUser) {
-        this.emailNewUser = emailNewUser;
-    }
-
-    public void setDateOfEmploymentNewUser(LocalDate dateOfEmploymentNewUser) {
-        this.dateOfEmploymentNewUser = dateOfEmploymentNewUser;
-    }
-
-    public void setPasswordNewUser(String passwordNewUser) {
-        this.passwordNewUser = passwordNewUser;
-    }
 
 }

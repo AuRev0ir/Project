@@ -11,59 +11,60 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idUser;
+    @Column( name = "id_user")
+    private Long id;
 
     @Column(name = "user_name", unique = true)
-    private String nameUser;
+    private String name;
 
     @Column(name = "password")
-    private String passwordUser;
+    private String password;
 
     @Column(name = "user_email")
-    private String emailUser;
+    private String email;
 
     @Column(name = "date_of_employment")
-    private LocalDate dateOfEmployment;
+    private LocalDate registrationDate;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns =@JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
-    private Set<Role> roles;
+    private Set <Role> roles;
 
     public User() {}
 
-    public User(String nameUser,
-                String passwordUser,
-                String emailUser,
-                LocalDate dateOfEmployment,
+    public User(String name,
+                String password,
+                String email,
+                LocalDate registrationDate,
                 Set<Role> roles) {
-        this.nameUser = nameUser;
-        this.emailUser = emailUser;
-        this.dateOfEmployment = dateOfEmployment;
+        this.name = name;
+        this.email = email;
+        this.registrationDate = registrationDate;
         this.roles = roles;
-        this.passwordUser = passwordUser;
+        this.password = password;
     }
 
     //get
-    public Long getIdUser() {
-        return idUser;
+    public Long getId() {
+        return id;
     }
 
-    public String getNameUser() {
-        return nameUser;
+    public String getName() {
+        return name;
     }
 
-    public String getPasswordUser() {
-        return passwordUser;
+    public String getPassword() {
+        return password;
     }
 
-    public String getEmailUser() {
-        return emailUser;
+    public String getEmail() {
+        return email;
     }
 
-    public LocalDate getDateOfEmployment() {
-        return dateOfEmployment;
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
     }
 
     public Set<Role> getRoles() {
@@ -72,24 +73,24 @@ public class User {
 
     //set
 
-    public void setIdUser(Long idUser) {
-        this.idUser = idUser;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setNameUser(String nameUser) {
-        this.nameUser = nameUser;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setPasswordUser(String passwordUser) {
-        this.passwordUser = passwordUser;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public void setEmailUser(String emailUser) {
-        this.emailUser = emailUser;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public void setDateOfEmployment(LocalDate dateOfEmployment) {
-        this.dateOfEmployment = dateOfEmployment;
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
     }
 
     public void setRoles(Set<Role> roles) {

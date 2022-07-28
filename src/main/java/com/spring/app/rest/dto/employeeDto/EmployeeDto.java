@@ -1,69 +1,72 @@
 package com.spring.app.rest.dto.employeeDto;
 
 import com.spring.app.domain.Employee;
+import com.spring.app.domain.Organization;
 
 import java.time.LocalDate;
 
 public class EmployeeDto {
+    private String firstName;
 
-    private Long id;
-    private String nameEmployee;
+    private String lastName;
 
-    private String surnameEmployee;
-
-    private String patronymicEmployee;
+    private String thirdName;
 
     private String jobTitle;
 
-    private LocalDate dateOfEmployment;
+    private LocalDate hireDate;
 
-    public EmployeeDto(Long id,
-                       String nameEmployee,
-                       String surnameEmployee,
-                       String patronymicEmployee,
+    public EmployeeDto(
+                       String firstName,
+                       String lastName,
+                       String thirdName,
                        String jobTitle,
-                       LocalDate dateOfEmployment) {
-        this.nameEmployee = nameEmployee;
-        this.surnameEmployee = surnameEmployee;
-        this.patronymicEmployee = patronymicEmployee;
+                       LocalDate hireDate) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.thirdName = thirdName;
         this.jobTitle = jobTitle;
-        this.dateOfEmployment = dateOfEmployment;
-        this.id = id;
+        this.hireDate = hireDate;
     }
 
-    public static EmployeeDto toDto(Employee employee){
+    public static EmployeeDto toDto(Employee employee) {
         return new EmployeeDto(
-                employee.getIdEmployee(),
-                employee.getNameEmployee(),
-                employee.getSurnameEmployee(),
-                employee.getPatronymicEmployee(),
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getThirdName(),
                 employee.getJobTitle(),
-                employee.getDateOfEmployment());
+                employee.getHireDate());
+    }
+
+    public static Employee toDomainObject (EmployeeDto dto, Organization organization) {
+        return new Employee(
+                dto.getFirstName(),
+                dto.getLastName(),
+                dto.getThirdName(),
+                dto.getJobTitle(),
+                dto.getHireDate(),
+                organization);
     }
 
     //get
 
-    public Long getId() {
-        return id;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getNameEmployee() {
-        return nameEmployee;
+    public String getLastName() {
+        return lastName;
     }
 
-    public String getSurnameEmployee() {
-        return surnameEmployee;
-    }
-
-    public String getPatronymicEmployee() {
-        return patronymicEmployee;
+    public String getThirdName() {
+        return thirdName;
     }
 
     public String getJobTitle() {
         return jobTitle;
     }
 
-    public LocalDate getDateOfEmployment() {
-        return dateOfEmployment;
+    public LocalDate getHireDate() {
+        return hireDate;
     }
 }

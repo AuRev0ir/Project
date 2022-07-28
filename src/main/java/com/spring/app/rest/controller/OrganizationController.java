@@ -2,8 +2,7 @@ package com.spring.app.rest.controller;
 
 
 import com.spring.app.rest.dto.organizationDto.OrganizationDto;
-import com.spring.app.rest.dto.organizationDto.OrganizationIdDto;
-import com.spring.app.rest.pojo.FormOrganization;
+import com.spring.app.rest.dto.organizationDto.OrganizationDtoOnlyId;
 import com.spring.app.services.servicerOrganization.OrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -36,7 +35,7 @@ public class OrganizationController {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = OrganizationIdDto.class)
+                                    schema = @Schema(implementation = OrganizationDtoOnlyId.class)
                             )
                     }
             ),
@@ -48,7 +47,7 @@ public class OrganizationController {
                     content = {@Content(schema = @Schema())})
     })
     @PostMapping ("/organizations")
-    public OrganizationIdDto addOrganization (@RequestBody FormOrganization formOrganization){
+    public OrganizationDtoOnlyId addOrganization (@RequestBody OrganizationDto formOrganization){
         return organizationService.addOrganization(formOrganization);
     }
 
@@ -74,8 +73,8 @@ public class OrganizationController {
     })
     @PatchMapping("/organizations/{idOrganization}")
     public OrganizationDto editingOrganization (@PathVariable("idOrganization") Long idOrganization,
-                                                @RequestBody FormOrganization formOrganization){
-        return organizationService.editingOrganization(formOrganization, idOrganization);
+                                                @RequestBody OrganizationDto formOrganization){
+        return organizationService.updateOrganization(formOrganization, idOrganization);
     }
 
 
@@ -99,7 +98,7 @@ public class OrganizationController {
     })
     @DeleteMapping ("/organizations/{idOrganization}")
     public ResponseEntity<String> deleteOrganization(@PathVariable("idOrganization") Long idOrganization){
-        return ResponseEntity.ok(organizationService.deleteOrganization(idOrganization));
+        return ResponseEntity.ok(organizationService.removeOrganization(idOrganization));
     }
 
     @Operation(summary = "List of all organizations by rating")
@@ -123,6 +122,6 @@ public class OrganizationController {
     })
     @GetMapping("/organizations")
     public List<OrganizationDto> organizationList (){
-        return organizationService.organizationList();
+        return organizationService.getOrganizations();
     }
 }

@@ -2,8 +2,7 @@ package com.spring.app.rest.controller;
 
 
 import com.spring.app.rest.dto.employeeDto.EmployeeDto;
-import com.spring.app.rest.dto.employeeDto.EmployeeIdDto;
-import com.spring.app.rest.pojo.FormEmployee;
+import com.spring.app.rest.dto.employeeDto.EmployeeDtoOnlyId;
 import com.spring.app.services.servicerEmployee.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -51,8 +50,8 @@ public class EmployeeController {
     @PatchMapping("/organizations/{idOrganization}/employees/{idEmployee}")
     public EmployeeDto editingEmployee (@PathVariable("idOrganization") Long idOrganization,
                                         @PathVariable("idEmployee") Long idEmployee,
-                                        @RequestBody FormEmployee formEmployee) {
-        return employeeService.editingEmployee(formEmployee,idOrganization,idEmployee);
+                                        @RequestBody EmployeeDto dto) {
+        return employeeService.updateEmployee(dto,idOrganization,idEmployee);
     }
 
 
@@ -78,7 +77,7 @@ public class EmployeeController {
     @DeleteMapping("/organizations/{idOrganization}/employees/{idEmployee}")
     public ResponseEntity<String> deleteEmployee(@PathVariable("idOrganization") Long idOrganization,
                                          @PathVariable("idEmployee") Long idEmployee){
-        return ResponseEntity.ok(employeeService.deleteEmployee(idOrganization, idEmployee));
+        return ResponseEntity.ok(employeeService.removeEmployee(idOrganization, idEmployee));
     }
 
 
@@ -91,7 +90,7 @@ public class EmployeeController {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = EmployeeIdDto.class)
+                                    schema = @Schema(implementation = EmployeeDtoOnlyId.class)
                             )
                     }
             ),
@@ -103,8 +102,8 @@ public class EmployeeController {
                     content = {@Content(schema = @Schema())})
     })
     @PostMapping("/organizations/{idOrganization}/employees")
-    public EmployeeIdDto addEmployee (@PathVariable("idOrganization") Long idOrganization,
-                                      @RequestBody FormEmployee formEmployee){
+    public EmployeeDtoOnlyId addEmployee (@PathVariable("idOrganization") Long idOrganization,
+                                    @RequestBody EmployeeDto formEmployee){
         return employeeService.addEmployee(formEmployee, idOrganization);
     }
 
@@ -131,6 +130,6 @@ public class EmployeeController {
     })
     @GetMapping("/organizations/{idOrganization}")
     public List<EmployeeDto> employeeList (@PathVariable("idOrganization") Long idOrganization){
-        return employeeService.employeeList(idOrganization);
+        return employeeService.getEmployees(idOrganization);
     }
 }

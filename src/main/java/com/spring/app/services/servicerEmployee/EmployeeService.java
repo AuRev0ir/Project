@@ -1,16 +1,15 @@
 package com.spring.app.services.servicerEmployee;
 
 import com.spring.app.rest.dto.employeeDto.EmployeeDto;
-import com.spring.app.rest.dto.employeeDto.EmployeeIdDto;
-import com.spring.app.rest.pojo.FormEmployee;
+import com.spring.app.rest.dto.employeeDto.EmployeeDtoOnlyId;
 
 import java.util.List;
 
 public interface EmployeeService {
 
-    EmployeeDto editingEmployee (FormEmployee formEmployee, Long idOrganization, Long idEmployee);
-    EmployeeIdDto addEmployee(FormEmployee formEmployee, Long idOrganization);
-    List<EmployeeDto> employeeList(Long idOrganization);
+    EmployeeDto updateEmployee(EmployeeDto dto, Long idOrganization, Long idEmployee);
+    EmployeeDtoOnlyId addEmployee(EmployeeDto dto, Long idOrganization);
+    List<EmployeeDto> getEmployees(Long idOrganization);
 
-    String deleteEmployee(Long idOrganization, Long idEmployee);
+    String removeEmployee(Long idOrganization, Long idEmployee);
 }
