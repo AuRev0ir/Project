@@ -1,6 +1,5 @@
 package com.spring.app.rest.dto.organizationDto;
 
-import com.spring.app.domain.Employee;
 import com.spring.app.domain.Organization;
 
 public class OrganizationDto {

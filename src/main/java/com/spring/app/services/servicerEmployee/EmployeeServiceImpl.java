@@ -77,6 +77,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<EmployeeDto> getEmployees(Long idOrganization) {
+        Organization organization = organizationRepository.findById(idOrganization).orElseThrow(RepositoryException::new);
         return jpqlQueryRepository
                 .sortedEmployees(idOrganization)
                 .stream()

@@ -1,9 +1,13 @@
-package com.spring.app.rest.pojo;
+package com.spring.app.rest.dto.registrationDto;
+
+import com.spring.app.domain.Role;
+import com.spring.app.domain.User;
+
 
 import java.time.LocalDate;
 import java.util.Set;
 
-public class FormRegistration {
+public class UserRegistrationDto {
 
     private String name;
 
@@ -13,16 +17,22 @@ public class FormRegistration {
 
     private String password;
 
-    public FormRegistration(String name,
-                            String email,
-                            LocalDate registrationDate,
-                            String password,
-                            Set<String> roleNewUser) {
+    public UserRegistrationDto (String name, String email, LocalDate registrationDate) {
         this.name = name;
         this.email = email;
         this.registrationDate = registrationDate;
-        this.password = password;
     }
+
+    public static User toDomainObject (UserRegistrationDto dto, Set<Role> roles, String password) {
+        return new User(
+                dto.getName(),
+                password,
+                dto.getEmail(),
+                dto.getRegistrationDate(),
+                roles);
+    }
+
+
 
 
     //get
@@ -41,6 +51,4 @@ public class FormRegistration {
     public String getPassword() {
         return password;
     }
-
-
 }

@@ -2,14 +2,14 @@ package com.spring.app.services.serviceSecurity;
 
 import com.spring.app.rest.dto.registrationDto.RoleDto;
 import com.spring.app.rest.dto.registrationDto.UserDto;
-import com.spring.app.rest.pojo.FormRegistration;
+import com.spring.app.rest.dto.registrationDto.UserRegistrationDto;
 
 import java.util.List;
 import java.util.Set;
 
 public interface UserService {
 
-    String addUser(FormRegistration formRegistration);
+    String addUser(UserRegistrationDto userRegistrationDto);
 
     Set<RoleDto> getRoles();
 

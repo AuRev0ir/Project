@@ -9,7 +9,7 @@ import com.spring.app.repository.security.RoleRepository;
 import com.spring.app.repository.security.UserRepository;
 import com.spring.app.rest.dto.registrationDto.RoleDto;
 import com.spring.app.rest.dto.registrationDto.UserDto;
-import com.spring.app.rest.pojo.FormRegistration;
+import com.spring.app.rest.dto.registrationDto.UserRegistrationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -44,7 +44,7 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
 
 
     @Override
-    public String addUser(FormRegistration formRegistration) {
+    public String addUser(UserRegistrationDto userRegistrationDto) {
 
         Set<Role>rolesNewUser = new HashSet<>();
         Role roleNewUser = roleRepository.findByName("USER").orElseThrow(RepositoryException::new);
@@ -53,18 +53,12 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
         List<User> usersList = userRepository.findAll();
 
         for (User user : usersList) {
-            if (Objects.equals(user.getName(), formRegistration.getName())){
+            if (Objects.equals(user.getName(), userRegistrationDto.getName())){
                 throw new CreateException();
             }
         }
 
-        User newUser = new User(
-                formRegistration.getName(),
-                bCryptPasswordEncoder.encode(formRegistration.getPassword()),
-                formRegistration.getEmail(),
-                formRegistration.getRegistrationDate(),
-                rolesNewUser);
-
+        User newUser = UserRegistrationDto.toDomainObject(userRegistrationDto, rolesNewUser,bCryptPasswordEncoder.encode(userRegistrationDto.getPassword()));
         userRepository.save(newUser);
 
         return "User successfully created";

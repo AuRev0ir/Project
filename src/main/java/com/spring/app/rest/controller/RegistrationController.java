@@ -3,7 +3,7 @@ package com.spring.app.rest.controller;
 
 import com.spring.app.rest.dto.registrationDto.RoleDto;
 import com.spring.app.rest.dto.registrationDto.UserDto;
-import com.spring.app.rest.pojo.FormRegistration;
+import com.spring.app.rest.dto.registrationDto.UserRegistrationDto;
 import com.spring.app.services.serviceSecurity.UserDetailServiceImpl;
 import com.spring.app.services.serviceSecurity.UserService;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -51,8 +51,8 @@ public class RegistrationController {
                     content = {@Content(schema = @Schema())})
     })
     @PostMapping("/userRegistration")
-    public ResponseEntity<String> addNewUser (@RequestBody FormRegistration formRegistration){
-        return ResponseEntity.ok(userDetailService.addUser(formRegistration));
+    public ResponseEntity<String> addNewUser (@RequestBody UserRegistrationDto userRegistrationDto){
+        return ResponseEntity.ok(userDetailService.addUser(userRegistrationDto));
     }
 
 
