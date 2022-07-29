@@ -6,7 +6,6 @@ import com.spring.app.exception.RepositoryException;
 import com.spring.app.exception.ServiceException;
 import com.spring.app.repository.dataJpa.EmployeeRepository;
 import com.spring.app.repository.dataJpa.OrganizationRepository;
-import com.spring.app.repository.jpql.JpqlQueryRepository;
 import com.spring.app.rest.dto.employeeDto.EmployeeDto;
 import com.spring.app.rest.dto.employeeDto.EmployeeDtoOnlyId;
 import org.springframework.stereotype.Service;
@@ -18,14 +17,12 @@ import java.util.stream.Collectors;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private final JpqlQueryRepository jpqlQueryRepository;
     private final EmployeeRepository employeeRepository;
     private final OrganizationRepository organizationRepository;
 
-    public EmployeeServiceImpl(JpqlQueryRepository jpqlQueryRepository,
+    public EmployeeServiceImpl(
                                EmployeeRepository employeeRepository,
                                OrganizationRepository organizationRepository) {
-        this.jpqlQueryRepository = jpqlQueryRepository;
         this.employeeRepository = employeeRepository;
         this.organizationRepository = organizationRepository;
     }
@@ -36,7 +33,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         boolean isSuccessfully = false;
 
         Employee editingEmployee = employeeRepository.findById(idEmployee).orElseThrow(RepositoryException::new);
-        List<Employee> employeeList = jpqlQueryRepository.newMethodSorted(name);
+        List<Employee> employeeList = employeeRepository.newMethodSortedPlus(name);
         for (Employee employee : employeeList) {
             if (Objects.equals(employee.getId(),idEmployee)) {
                 if (!Objects.equals(employee.getFirstName(),dto.getFirstName())){
@@ -78,8 +75,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<EmployeeDto> getEmployees(String name) {
         Organization organization = organizationRepository.findByName(name).orElseThrow(RepositoryException::new);
-        return jpqlQueryRepository
-                .newMethodSorted(name)
+        return employeeRepository
+                .newMethodSortedPlus(name)
                 .stream()
                 .map(EmployeeDto::toDto)
                 .collect(Collectors.toList());
@@ -88,10 +85,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public String removeEmployee(String name, Long idEmployee) {
         boolean isSuccessfully = false;
-        List<Employee> employeeList = jpqlQueryRepository.newMethodSorted(name);
+        List<Employee> employeeList = employeeRepository.newMethodSortedPlus(name);
         for (Employee employee : employeeList) {
             if(Objects.equals(employee.getId(), idEmployee)){
-                jpqlQueryRepository.newMethodDeleteEmployeeById(idEmployee);
+                employeeRepository.newMethodDeleteEmployeeById(idEmployee);
                 isSuccessfully = true;
             }
         }

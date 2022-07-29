@@ -5,7 +5,6 @@ import com.spring.app.domain.Organization;
 import com.spring.app.exception.RepositoryException;
 import com.spring.app.exception.ServiceException;
 import com.spring.app.repository.dataJpa.OrganizationRepository;
-import com.spring.app.repository.jpql.JpqlQueryRepository;
 import com.spring.app.repository.nativeQuery.OrganizationNativeQueryRepository;
 import com.spring.app.rest.dto.organizationDto.OrganizationDto;
 import com.spring.app.rest.dto.organizationDto.OrganizationDtoOnlyNane;
@@ -18,16 +17,11 @@ import java.util.stream.Collectors;
 @Service
 public class OrganizationServiceImpl implements OrganizationService{
 
-    private final JpqlQueryRepository jpqlQueryRepository;
-    private final OrganizationRepository organizationRepository;
-    private final OrganizationNativeQueryRepository organizationNativeQueryRepository;
 
-    public OrganizationServiceImpl(JpqlQueryRepository jpqlQueryRepository,
-                                   OrganizationRepository organizationRepository,
-                                   OrganizationNativeQueryRepository organizationNativeQueryRepository) {
-        this.jpqlQueryRepository = jpqlQueryRepository;
+    private final OrganizationRepository organizationRepository;
+
+    public OrganizationServiceImpl(OrganizationRepository organizationRepository) {
         this.organizationRepository = organizationRepository;
-        this.organizationNativeQueryRepository = organizationNativeQueryRepository;
     }
 
     @Override
@@ -58,7 +52,7 @@ public class OrganizationServiceImpl implements OrganizationService{
 
     @Override
     public List<OrganizationDto> getOrganizations() {
-        return organizationNativeQueryRepository
+        return organizationRepository
                 .sortOrganizationsByRating()
                 .stream()
                 .map(OrganizationDto::toDto)
@@ -70,16 +64,16 @@ public class OrganizationServiceImpl implements OrganizationService{
     public String removeOrganization(String name) {
         boolean isSuccessfully = false;
 
-        List <Employee> deleteEmployee = jpqlQueryRepository.newMethodSorted(name);
+        List <Employee> deleteEmployee = organizationRepository.newMethodSortedPlus(name);
         List<Organization> organizations = organizationRepository.findAll();
 
         for (Organization organization : organizations) {
             if(Objects.equals(organization.getName(),name)){
                 for (Employee employee : deleteEmployee) {
-                    jpqlQueryRepository.newMethodDeleteEmployeeById(employee.getId());
+                    organizationRepository.newMethodDeleteEmployeeById(employee.getId());
                 }
 
-                jpqlQueryRepository.newMethodDeleteOrganizationById(name);
+                organizationRepository.newMethodDeleteOrganizationById(name);
                 isSuccessfully = true;
             }
         }
