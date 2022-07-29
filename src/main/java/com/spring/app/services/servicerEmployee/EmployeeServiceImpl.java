@@ -31,12 +31,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeDto updateEmployee(EmployeeDto dto, Long idOrganization, Long idEmployee) {
+    public EmployeeDto updateEmployee(EmployeeDto dto, String name, Long idEmployee) {
 
         boolean isSuccessfully = false;
 
         Employee editingEmployee = employeeRepository.findById(idEmployee).orElseThrow(RepositoryException::new);
-        List<Employee> employeeList = jpqlQueryRepository.sortedEmployees(idOrganization);
+        List<Employee> employeeList = jpqlQueryRepository.newMethodSorted(name);
         for (Employee employee : employeeList) {
             if (Objects.equals(employee.getId(),idEmployee)) {
                 if (!Objects.equals(employee.getFirstName(),dto.getFirstName())){
@@ -67,8 +67,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeDtoOnlyId addEmployee(EmployeeDto dto, Long idOrganization) {
-        Organization organizationById = organizationRepository.findById(idOrganization)
+    public EmployeeDtoOnlyId addEmployee(EmployeeDto dto, String name) {
+        Organization organizationById = organizationRepository.findByName(name)
                 .orElseThrow(RepositoryException::new);
         Employee newEmployee = EmployeeDto.toDomainObject(dto, organizationById);
         employeeRepository.save(newEmployee);
@@ -76,22 +76,22 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<EmployeeDto> getEmployees(Long idOrganization) {
-        Organization organization = organizationRepository.findById(idOrganization).orElseThrow(RepositoryException::new);
+    public List<EmployeeDto> getEmployees(String name) {
+        Organization organization = organizationRepository.findByName(name).orElseThrow(RepositoryException::new);
         return jpqlQueryRepository
-                .sortedEmployees(idOrganization)
+                .newMethodSorted(name)
                 .stream()
                 .map(EmployeeDto::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public String removeEmployee(Long idOrganization, Long idEmployee) {
+    public String removeEmployee(String name, Long idEmployee) {
         boolean isSuccessfully = false;
-        List<Employee> employeeList = jpqlQueryRepository.sortedEmployees(idOrganization);
+        List<Employee> employeeList = jpqlQueryRepository.newMethodSorted(name);
         for (Employee employee : employeeList) {
             if(Objects.equals(employee.getId(), idEmployee)){
-                jpqlQueryRepository.deleteEmployeeById(idEmployee);
+                jpqlQueryRepository.newMethodDeleteEmployeeById(idEmployee);
                 isSuccessfully = true;
             }
         }

@@ -22,6 +22,7 @@ databaseChangeLog:
                   name: name_organization
                   type: varchar(200)
                   constraints:
+                    unique: true
                     nullable: false
 
               - column:

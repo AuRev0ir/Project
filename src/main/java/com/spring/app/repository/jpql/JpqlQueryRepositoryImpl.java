@@ -18,25 +18,28 @@ public class JpqlQueryRepositoryImpl implements JpqlQueryRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Override
-    public List<Employee> sortedEmployees(Long idOrganization) {
-
-        String queryString = "SELECT s FROM Employee s " +
-                "WHERE  s.organization.id = :idOrganization " +
-                "ORDER BY s.hireDate ASC";
-
-        TypedQuery<Employee> query = entityManager.createQuery(queryString, Employee.class);
-        query.setParameter("idOrganization",idOrganization);
-        return query.getResultList();
-    }
 
 
     // Может быть подход не правильный, но для корректного удаления я создал 2 последовательные транзакции
     // В других случаях выбрасывала Exception
 
-    @Transactional(rollbackFor = ServiceException.class)
+
     @Override
-    public void deleteEmployeeById(Long idEmployee) {
+    public List<Employee> newMethodSorted(String name) {
+
+        String queryString = "SELECT s FROM Employee s " +
+                "WHERE  s.organization.name = :name " +
+                "ORDER BY s.hireDate ASC";
+
+        TypedQuery<Employee> query = entityManager.createQuery(queryString, Employee.class);
+        query.setParameter("name", name);
+        return query.getResultList();
+
+    }
+
+    @Transactional()
+    @Override
+    public void newMethodDeleteEmployeeById(Long idEmployee) {
 
         String queryString = "DELETE FROM Employee s " +
                 "WHERE s.id = :idEmployee ";
@@ -46,15 +49,15 @@ public class JpqlQueryRepositoryImpl implements JpqlQueryRepository {
         query.executeUpdate();
 
     }
-    @Transactional(rollbackFor = ServiceException.class)
+    @Transactional()
     @Override
-    public void deleteOrganizationById(Long idOrganization) {
+    public void newMethodDeleteOrganizationById(String name) {
 
         String queryString = "DELETE FROM Organization s " +
-                "WHERE s.id = :idOrganization ";
+                "WHERE s.name = :name ";
 
         Query query = entityManager.createQuery(queryString);
-        query.setParameter("idOrganization", idOrganization);
+        query.setParameter("name", name);
         query.executeUpdate();
     }
 }

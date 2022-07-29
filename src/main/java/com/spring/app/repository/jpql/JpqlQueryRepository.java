@@ -6,10 +6,11 @@ import java.util.List;
 
 public interface JpqlQueryRepository {
 
-    List<Employee> sortedEmployees(Long idOrganization);
 
-    void deleteEmployeeById(Long idEmployee);
+    List<Employee> newMethodSorted(String name);
 
-    void deleteOrganizationById(Long idOrganization);
+    void newMethodDeleteEmployeeById(Long idEmployee);
+
+    void newMethodDeleteOrganizationById(String name);
 
 }

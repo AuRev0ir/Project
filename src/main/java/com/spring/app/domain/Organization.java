@@ -17,7 +17,7 @@ public class Organization {
     private long rating;
 
 
-    @Column(name = "name_organization", nullable = false)
+    @Column(name = "name_organization", unique = true)
     private String name;
 
 

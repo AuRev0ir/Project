@@ -47,11 +47,11 @@ public class EmployeeController {
             @ApiResponse(responseCode = "403", description = "Access blocked",
                     content = {@Content(schema = @Schema())})
     })
-    @PatchMapping("/organizations/{idOrganization}/employees/{idEmployee}")
-    public EmployeeDto editingEmployee (@PathVariable("idOrganization") Long idOrganization,
+    @PatchMapping("/organizations/{name}/employees/{idEmployee}")
+    public EmployeeDto editingEmployee (@PathVariable("name") String name,
                                         @PathVariable("idEmployee") Long idEmployee,
                                         @RequestBody EmployeeDto dto) {
-        return employeeService.updateEmployee(dto,idOrganization,idEmployee);
+        return employeeService.updateEmployee(dto,name,idEmployee);
     }
 
 
@@ -74,10 +74,10 @@ public class EmployeeController {
             @ApiResponse(responseCode = "403", description = "Access blocked",
                     content = {@Content(schema = @Schema())})
     })
-    @DeleteMapping("/organizations/{idOrganization}/employees/{idEmployee}")
-    public ResponseEntity<String> deleteEmployee(@PathVariable("idOrganization") Long idOrganization,
+    @DeleteMapping("/organizations/{name}/employees/{idEmployee}")
+    public ResponseEntity<String> deleteEmployee(@PathVariable("name") String name,
                                          @PathVariable("idEmployee") Long idEmployee){
-        return ResponseEntity.ok(employeeService.removeEmployee(idOrganization, idEmployee));
+        return ResponseEntity.ok(employeeService.removeEmployee(name, idEmployee));
     }
 
 
@@ -101,10 +101,10 @@ public class EmployeeController {
             @ApiResponse(responseCode = "403", description = "Access blocked",
                     content = {@Content(schema = @Schema())})
     })
-    @PostMapping("/organizations/{idOrganization}/employees")
-    public EmployeeDtoOnlyId addEmployee (@PathVariable("idOrganization") Long idOrganization,
+    @PostMapping("/organizations/{name}/employees")
+    public EmployeeDtoOnlyId addEmployee (@PathVariable("name") String name,
                                     @RequestBody EmployeeDto formEmployee){
-        return employeeService.addEmployee(formEmployee, idOrganization);
+        return employeeService.addEmployee(formEmployee, name);
     }
 
 
@@ -128,8 +128,8 @@ public class EmployeeController {
                     content = {@Content(schema = @Schema())})
 
     })
-    @GetMapping("/organizations/{idOrganization}")
-    public List<EmployeeDto> employeeList (@PathVariable("idOrganization") Long idOrganization){
-        return employeeService.getEmployees(idOrganization);
+    @GetMapping("/organizations/{name}")
+    public List<EmployeeDto> employeeList (@PathVariable("name") String name){
+        return employeeService.getEmployees(name);
     }
 }
