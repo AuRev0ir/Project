@@ -35,6 +35,7 @@ databaseChangeLog:
                   type: varchar(200)
                   constraints:
                     nullable: false
+
               - column:
                   name: hire_date
                   type: date
@@ -55,5 +56,5 @@ databaseChangeLog:
             baseTableName: employees
             baseColumnNames: organization_id
             referencedTableName: organizations
-            referencedColumnNames: id_organization
+            referencedColumnNames: organization_id
             constraintName: FKEmployee

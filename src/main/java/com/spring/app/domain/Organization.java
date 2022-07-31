@@ -1,8 +1,6 @@
 package com.spring.app.domain;
 
-
 import javax.persistence.*;
-
 
 @Entity
 @Table(name = "organizations")
@@ -10,23 +8,22 @@ public class Organization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_organization")
+    @Column(name = "organization_id", nullable = false)
     private long id;
 
-    @Column(name = "organization_Rating", nullable = false)
+    @Column(nullable = false)
     private long rating;
 
-
-    @Column(name = "name_organization", unique = true)
+    @Column(name = "organization_name", unique = true, nullable = false)
     private String name;
 
-
-    @Column(name = "description_organization")
+    @Column(name = "organization_description")
     private String description;
 
     public Organization() {}
 
-    public Organization(String name, String description,
+    public Organization(String name,
+                        String description,
                         Long rating) {
         this.name = name;
         this.description = description;

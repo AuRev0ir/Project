@@ -1,6 +1,5 @@
 package com.spring.app.domain;
 
-
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -10,7 +9,7 @@ public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "employee_id")
+    @Column(name = "employee_id", nullable = false)
     private long id;
 
     @Column(nullable = false)
