@@ -1,4 +1,4 @@
-package com.spring.app.repository.dataJpa;
+package com.spring.app.repository.querys;
 
 import com.spring.app.domain.Organization;
 import org.springframework.data.jpa.repository.Query;

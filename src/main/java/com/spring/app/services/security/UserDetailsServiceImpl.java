@@ -1,4 +1,4 @@
-package com.spring.app.services.serviceSecurity;
+package com.spring.app.services.security;
 
 
 import com.spring.app.domain.Role;
@@ -8,9 +8,9 @@ import com.spring.app.exception.RepositoryException;
 import com.spring.app.exception.ServiceException;
 import com.spring.app.repository.security.JpaRoleRepository;
 import com.spring.app.repository.security.JpaUserRepository;
-import com.spring.app.rest.dto.registrationDto.RoleDto;
-import com.spring.app.rest.dto.registrationDto.UserDto;
-import com.spring.app.rest.dto.registrationDto.UserRegistrationDto;
+import com.spring.app.rest.dto.security.RoleDto;
+import com.spring.app.rest.dto.security.UserDto;
+import com.spring.app.rest.dto.security.UserRegistrationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class UserDetailServiceImpl implements UserDetailsService, UserService {
+public class UserDetailsServiceImpl implements UserDetailsService, UserService {
 
 
     @Autowired
@@ -45,15 +45,15 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
 
 
     @Override
-    public String addUser(UserRegistrationDto userRegistrationDto) {
+    public String addUser(UserRegistrationDto dto) {
 
-        Set<Role>rolesNewUser = new HashSet<>();
-        Role roleNewUser = jpaRoleRepository.findByName("USER").orElseThrow(RepositoryException::new);
-        rolesNewUser.add(roleNewUser);
+
+        Role roleFromDB = jpaRoleRepository.findByName("USER").orElseThrow(RepositoryException::new);
+        Set<Role>userRoles = Set.of(roleFromDB);
 
         Optional<User> userName = jpaUserRepository.findAll()
                 .stream()
-                .filter(organization -> Objects.equals(organization.getName(),userRegistrationDto.getName()))
+                .filter(organization -> Objects.equals(organization.getName(),dto.getName()))
                 .findFirst();
 
         // Если имя User уже существует
@@ -62,7 +62,7 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
         }
 
         jpaUserRepository.save(UserRegistrationDto.toDomainObject(
-                userRegistrationDto, rolesNewUser,bCryptPasswordEncoder.encode(userRegistrationDto.getPassword())));
+                dto, userRoles, bCryptPasswordEncoder.encode(dto.getPassword())));
 
         return "User successfully created";
     }
@@ -86,74 +86,74 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public UserDto getUserByName(String nameUser) {
-        User userByName = jpaUserRepository.findByName(nameUser).orElseThrow(RepositoryException::new);
-        return UserDto.toDto(userByName);
+    public UserDto getUserByName(String name) {
+        User userFromDB = jpaUserRepository.findByName(name).orElseThrow(RepositoryException::new);
+        return UserDto.toDto(userFromDB);
     }
 
     @Override
-    public String removeUser(String nameDeleteUser) {
-        User deleteUser = jpaUserRepository.findByName(nameDeleteUser).orElseThrow(RepositoryException::new);
-        jpaUserRepository.delete(deleteUser);
-        return "User: " + nameDeleteUser + " deleted successfully";
+    public String removeUser(String name) {
+        User userFromDB = jpaUserRepository.findByName(name).orElseThrow(RepositoryException::new);
+        jpaUserRepository.delete(userFromDB);
+        return "User: " + name + " deleted successfully";
     }
 
     @Override
-    public String addUserRole(String newNameRole, String nameUser) {
+    public String addUserRole(String roleName, String userName) {
 
-        User user = jpaUserRepository.findByName(nameUser).orElseThrow(RepositoryException::new);
-        Role roleByName = jpaRoleRepository.findByName(newNameRole).orElseThrow(RepositoryException::new);
+        User userFromDB = jpaUserRepository.findByName(userName).orElseThrow(RepositoryException::new);
+        Role roleFromDB = jpaRoleRepository.findByName(roleName).orElseThrow(RepositoryException::new);
 
 
         // Проверка на наличие одинаковых ролей у User
-        Set<Role> sameRoles = user.getRoles()
+        Set<Role> rolesSame = userFromDB.getRoles()
                 .stream()
-                .filter(role -> Objects.equals(role.getName(), roleByName.getName()))
+                .filter(role -> Objects.equals(role.getName(), roleFromDB.getName()))
                 .collect(Collectors.toSet());
 
-        if(!sameRoles.isEmpty()){
+        if(!rolesSame.isEmpty()){
             throw new ServiceException();
         }
 
         // Если ошибок нет добавляем Role
-        user.getRoles().add(roleByName);
-        jpaUserRepository.save(user);
+        userFromDB.getRoles().add(roleFromDB);
+        jpaUserRepository.save(userFromDB);
 
-        return nameUser + " given role " + newNameRole;
+        return userName + " given role " + roleName;
     }
 
     @Override
-    public String removeUserRole(String deleteRole, String nameUser) {
+    public String removeUserRole(String roleName, String userName) {
 
-        User user = jpaUserRepository.findByName(nameUser).orElseThrow(RepositoryException::new);
-        Role roleByName = jpaRoleRepository.findByName(deleteRole).orElseThrow(RepositoryException::new);
+        User userFromDB = jpaUserRepository.findByName(userName).orElseThrow(RepositoryException::new);
+        Role roleFromDB = jpaRoleRepository.findByName(roleName).orElseThrow(RepositoryException::new);
 
         // Проверка на наличие роли, которую стоит удалить
-        Set<Role> roles = user.getRoles()
+        Set<Role> rolesRemote = userFromDB.getRoles()
                 .stream()
-                .filter(role -> Objects.equals(role.getName(), roleByName.getName()))
+                .filter(role -> Objects.equals(role.getName(), roleFromDB.getName()))
                 .collect(Collectors.toSet());
 
-        if(roles.isEmpty()){
+        if(rolesRemote.isEmpty()){
             throw new ServiceException();
         }
 
         // Обновляем Roles У User
-        Set<Role> allRoles = user.getRoles()
+        Set<Role> rolesUser = userFromDB.getRoles()
                 .stream()
-                .filter(role -> !Objects.equals(role.getName(),roleByName.getName()))
+                .filter(role -> !Objects.equals(role.getName(),roleFromDB.getName()))
                 .collect(Collectors.toSet());
 
 
         // Если у User нету Roles, то очищаем БД иначе сохраняем
-        if(allRoles.isEmpty()){
-            jpaUserRepository.delete(user);
+        if(rolesUser.isEmpty()){
+            jpaUserRepository.delete(userFromDB);
         } else {
-            user.setRoles(allRoles);
-            jpaUserRepository.save(user);
+            userFromDB.setRoles(rolesUser);
+            jpaUserRepository.save(userFromDB);
         }
 
-        return nameUser + " delete role " + deleteRole;
+        return userName + " delete role " + roleName;
     }
 
 }

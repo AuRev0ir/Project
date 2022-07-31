@@ -1,9 +1,9 @@
 package com.spring.app.rest.controller;
 
 
-import com.spring.app.rest.dto.employeeDto.EmployeeDto;
-import com.spring.app.rest.dto.employeeDto.EmployeeDtoOnlyId;
-import com.spring.app.services.servicerEmployee.EmployeeService;
+import com.spring.app.rest.dto.employee.EmployeeDto;
+import com.spring.app.rest.dto.employee.EmployeeIdDto;
+import com.spring.app.services.employee.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -90,7 +90,7 @@ public class EmployeeController {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = EmployeeDtoOnlyId.class)
+                                    schema = @Schema(implementation = EmployeeIdDto.class)
                             )
                     }
             ),
@@ -102,8 +102,8 @@ public class EmployeeController {
                     content = {@Content(schema = @Schema())})
     })
     @PostMapping("/organizations/{name}/employees")
-    public EmployeeDtoOnlyId addEmployee (@PathVariable("name") String name,
-                                    @RequestBody EmployeeDto formEmployee){
+    public EmployeeIdDto addEmployee (@PathVariable("name") String name,
+                                      @RequestBody EmployeeDto formEmployee){
         return employeeService.addEmployee(formEmployee, name);
     }
 

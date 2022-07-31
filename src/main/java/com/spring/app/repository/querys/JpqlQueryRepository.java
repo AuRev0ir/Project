@@ -1,4 +1,4 @@
-package com.spring.app.repository.dataJpa;
+package com.spring.app.repository.querys;
 
 import com.spring.app.domain.Employee;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,16 +12,16 @@ public interface JpqlQueryRepository {
     @Query(value = "SELECT s FROM Employee s " +
             "WHERE s.organization.name = ?1 " +
             "ORDER BY s.hireDate ASC")
-    List<Employee> newMethodSortedPlus(String name);
+    List<Employee> sortEmployeeByOrganizationName(String name);
 
     @Transactional
     @Modifying
     @Query(value = "DELETE FROM Employee s WHERE s.id = ?1 ")
-    void newMethodDeleteEmployeeById(Long id);
+    void removeEmployeeById(Long id);
 
     @Transactional
     @Modifying
     @Query(value = "DELETE FROM Organization s WHERE s.name = ?1 ")
-    void newMethodDeleteOrganizationByName(String name);
+    void removeOrganizationByName(String name);
 
 }

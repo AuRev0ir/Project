@@ -9,6 +9,5 @@ import java.util.Set;
 public interface JpaRoleRepository extends CrudRepository<Role, Long> {
 
     Set<Role>findAll();
-
     Optional<Role> findByName(String name);
 }

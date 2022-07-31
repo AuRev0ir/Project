@@ -1,4 +1,4 @@
-package com.spring.app.services.serviceSecurity;
+package com.spring.app.services.security;
 
 import com.spring.app.domain.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,29 +12,29 @@ import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
 
-    private Long idUserDetails;
+    private Long id;
 
-    private String nameUserDetails;
+    private String name;
 
-    private String emailUserDetails;
+    private String email;
 
-    private LocalDate dateOfEmploymentUserDetails;
+    private LocalDate hireDate;
 
-    private String passwordUserDetails;
+    private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long idUserDetails,
-                           String nameUserDetails,
-                           String emailUserDetails,
-                           LocalDate dateOfEmploymentUserDetails,
-                           String passwordUserDetails,
+    public UserDetailsImpl(Long id,
+                           String name,
+                           String email,
+                           LocalDate hireDate,
+                           String password,
                            Collection<? extends GrantedAuthority> authorities) {
-        this.idUserDetails = idUserDetails;
-        this.nameUserDetails = nameUserDetails;
-        this.emailUserDetails = emailUserDetails;
-        this.dateOfEmploymentUserDetails = dateOfEmploymentUserDetails;
-        this.passwordUserDetails = passwordUserDetails;
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.hireDate = hireDate;
+        this.password = password;
         this.authorities = authorities;
     }
 
@@ -63,24 +63,24 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getPassword() {
-        return passwordUserDetails;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return nameUserDetails;
+        return name;
     }
 
-    public Long getIdUserDetails() {
-        return idUserDetails;
+    public Long getId() {
+        return id;
     }
 
-    public String getEmailUserDetails() {
-        return emailUserDetails;
+    public String getEmail() {
+        return email;
     }
 
-    public LocalDate getDateOfEmploymentUserDetails() {
-        return dateOfEmploymentUserDetails;
+    public LocalDate getHireDate() {
+        return hireDate;
     }
 
     @Override

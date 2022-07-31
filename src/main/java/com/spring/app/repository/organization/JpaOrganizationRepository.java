@@ -1,6 +1,8 @@
-package com.spring.app.repository.dataJpa;
+package com.spring.app.repository.organization;
 
 import com.spring.app.domain.Organization;
+import com.spring.app.repository.querys.JpqlQueryRepository;
+import com.spring.app.repository.querys.NativeQueryOrganizationRepository;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

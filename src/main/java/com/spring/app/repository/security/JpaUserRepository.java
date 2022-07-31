@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface JpaUserRepository extends CrudRepository<User, Long> {
-    Optional<User> findByName(String nameUser);
+    Optional<User> findByName(String name);
     List<User> findAll();
 }

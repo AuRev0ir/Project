@@ -1,12 +1,12 @@
-package com.spring.app.services.servicerOrganization;
+package com.spring.app.services.organization;
 
 import com.spring.app.domain.Employee;
 import com.spring.app.domain.Organization;
 import com.spring.app.exception.RepositoryException;
 import com.spring.app.exception.ServiceException;
-import com.spring.app.repository.dataJpa.JpaOrganizationRepository;
-import com.spring.app.rest.dto.organizationDto.OrganizationDto;
-import com.spring.app.rest.dto.organizationDto.OrganizationDtoOnlyNane;
+import com.spring.app.repository.organization.JpaOrganizationRepository;
+import com.spring.app.rest.dto.organization.OrganizationDto;
+import com.spring.app.rest.dto.organization.OrganizationNameDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 @Service
 public class OrganizationServiceImpl implements OrganizationService{
 
-
     private final JpaOrganizationRepository jpaOrganizationRepository;
 
     public OrganizationServiceImpl(JpaOrganizationRepository jpaOrganizationRepository) {
@@ -28,35 +27,37 @@ public class OrganizationServiceImpl implements OrganizationService{
     @Override
     public OrganizationDto updateOrganization(OrganizationDto dto , String name) {
 
-        Organization organizationFromTheRepository  = jpaOrganizationRepository.findByName(name)
+        Organization organizationFromDB  = jpaOrganizationRepository.findByName(name)
                 .orElseThrow(RepositoryException::new);
 
-        if(!Objects.equals(organizationFromTheRepository.getName(),dto.getName())){
-            organizationFromTheRepository.setName(dto.getName());
+        if(!Objects.equals(organizationFromDB.getName(),dto.getName())){
+            organizationFromDB.setName(dto.getName());
         }
-        if(!Objects.equals(organizationFromTheRepository.getDescription(),dto.getDescription())){
-            organizationFromTheRepository.setDescription(dto.getDescription());
+        if(!Objects.equals(organizationFromDB.getDescription(),dto.getDescription())){
+            organizationFromDB.setDescription(dto.getDescription());
         }
-        if(!Objects.equals(organizationFromTheRepository.getRating(),dto.getRating())){
-            organizationFromTheRepository.setRating(dto.getRating());
+        if(!Objects.equals(organizationFromDB.getRating(),dto.getRating())){
+            organizationFromDB.setRating(dto.getRating());
         }
 
         return OrganizationDto.toDto(
-                jpaOrganizationRepository.save(organizationFromTheRepository));
+                jpaOrganizationRepository.save(organizationFromDB));
     }
 
     @Override
-    public OrganizationDtoOnlyNane addOrganization(OrganizationDto dto) {
-        Optional<Organization> organizationName = jpaOrganizationRepository.findAll()
+    public OrganizationNameDto addOrganization(OrganizationDto dto) {
+
+        // Проверка на уже существующую Organization by name
+        Optional<Organization> organizationFromDB = jpaOrganizationRepository.findAll()
                 .stream()
                 .filter(organization -> Objects.equals(organization.getName(),dto.getName()))
                 .findFirst();
 
-        if(organizationName.isPresent()){
+        if(organizationFromDB.isPresent()){
             throw new ServiceException();
         }
 
-        return OrganizationDtoOnlyNane.toDto(
+        return OrganizationNameDto.toDto(
                 jpaOrganizationRepository.save(OrganizationDto.toDomainObject(dto)));
     }
 
@@ -73,13 +74,13 @@ public class OrganizationServiceImpl implements OrganizationService{
     @Override
     public String removeOrganization(String name) {
 
-        Organization organizationFromTheRepository  = jpaOrganizationRepository.findByName(name)
+        Organization organizationFromDB  = jpaOrganizationRepository.findByName(name)
                 .orElseThrow(RepositoryException::new);
 
-        List<Employee> remoteEmployees = jpaOrganizationRepository.newMethodSortedPlus(organizationFromTheRepository.getName());
+        List<Employee> remoteEmployees = jpaOrganizationRepository.sortEmployeeByOrganizationName(organizationFromDB.getName());
         remoteEmployees
-                .forEach(employee -> jpaOrganizationRepository.newMethodDeleteEmployeeById(employee.getId()));
-        jpaOrganizationRepository.newMethodDeleteOrganizationByName(organizationFromTheRepository.getName());
+                .forEach(employee -> jpaOrganizationRepository.removeEmployeeById(employee.getId()));
+        jpaOrganizationRepository.removeOrganizationByName(organizationFromDB.getName());
 
         return "Organization successfully deleted";
     }

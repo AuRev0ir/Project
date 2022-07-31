@@ -1,4 +1,4 @@
-package com.spring.app.rest.dto.registrationDto;
+package com.spring.app.rest.dto.security;
 
 import com.spring.app.domain.Role;
 import com.spring.app.domain.User;

@@ -1,7 +1,7 @@
-package com.spring.app.configApp;
+package com.spring.app.configs;
 
-import com.spring.app.configApp.basic.MyBasicAuthenticationEntryPoint;
-import com.spring.app.services.serviceSecurity.UserDetailServiceImpl;
+import com.spring.app.configs.basic.MyBasicAuthenticationEntryPoint;
+import com.spring.app.services.security.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
     @Autowired
-    private UserDetailServiceImpl userDetailService;
+    private UserDetailsServiceImpl userDetailService;
 
     @Autowired
     private MyBasicAuthenticationEntryPoint authenticationEntryPoint;

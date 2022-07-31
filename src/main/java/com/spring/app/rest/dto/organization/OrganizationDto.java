@@ -1,4 +1,4 @@
-package com.spring.app.rest.dto.organizationDto;
+package com.spring.app.rest.dto.organization;
 
 import com.spring.app.domain.Organization;
 

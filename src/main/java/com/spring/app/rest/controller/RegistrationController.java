@@ -1,12 +1,11 @@
 package com.spring.app.rest.controller;
 
 
-import com.spring.app.rest.dto.registrationDto.RoleDto;
-import com.spring.app.rest.dto.registrationDto.UserDto;
-import com.spring.app.rest.dto.registrationDto.UserRegistrationDto;
-import com.spring.app.services.serviceSecurity.UserDetailServiceImpl;
-import com.spring.app.services.serviceSecurity.UserService;
-import io.swagger.v3.oas.annotations.Hidden;
+import com.spring.app.rest.dto.security.RoleDto;
+import com.spring.app.rest.dto.security.UserDto;
+import com.spring.app.rest.dto.security.UserRegistrationDto;
+import com.spring.app.services.security.UserDetailsServiceImpl;
+import com.spring.app.services.security.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,10 +22,10 @@ import java.util.Set;
 @RestController
 public class RegistrationController {
 
-    private final UserService userDetailService;
+    private final UserService userDetailsService;
 
-    public RegistrationController(UserDetailServiceImpl userDetailService) {
-        this.userDetailService = userDetailService;
+    public RegistrationController(UserDetailsServiceImpl userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
 
 
@@ -52,7 +51,7 @@ public class RegistrationController {
     })
     @PostMapping("/userRegistration")
     public ResponseEntity<String> addNewUser (@RequestBody UserRegistrationDto userRegistrationDto){
-        return ResponseEntity.ok(userDetailService.addUser(userRegistrationDto));
+        return ResponseEntity.ok(userDetailsService.addUser(userRegistrationDto));
     }
 
 
@@ -61,19 +60,19 @@ public class RegistrationController {
 
     @GetMapping("/users")
     public List<UserDto> allUsers(){
-        return userDetailService.getUsers();
+        return userDetailsService.getUsers();
     }
 
 
     @DeleteMapping("/users")
     public ResponseEntity<String> deleteUser(@RequestParam String nameDeleteUser){
-        return ResponseEntity.ok(userDetailService.removeUser(nameDeleteUser));
+        return ResponseEntity.ok(userDetailsService.removeUser(nameDeleteUser));
     }
 
 
     @GetMapping("/roles")
     public Set<RoleDto> allRoles (){
-        return userDetailService.getRoles();
+        return userDetailsService.getRoles();
     }
 
 
@@ -81,19 +80,19 @@ public class RegistrationController {
     @PatchMapping("/users/addRole")
     public ResponseEntity<String> addRoleUser(@RequestParam String nameUser,
                               @RequestParam String newNameRole){
-        return ResponseEntity.ok(userDetailService.addUserRole(newNameRole, nameUser));
+        return ResponseEntity.ok(userDetailsService.addUserRole(newNameRole, nameUser));
     }
 
 
     @PatchMapping ("users/deleteRole")
     public ResponseEntity<String> removeRoleUser (@RequestParam String nameUser,
                                   @RequestParam String deleteNameRole){
-        return ResponseEntity.ok(userDetailService.removeUserRole(deleteNameRole, nameUser));
+        return ResponseEntity.ok(userDetailsService.removeUserRole(deleteNameRole, nameUser));
     }
 
     @GetMapping("/users/userByName")
     public UserDto userByName(@RequestParam String userName){
-        return userDetailService.getUserByName(userName);
+        return userDetailsService.getUserByName(userName);
     }
 
 

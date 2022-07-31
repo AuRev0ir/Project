@@ -1,9 +1,9 @@
 package com.spring.app.rest.controller;
 
 
-import com.spring.app.rest.dto.organizationDto.OrganizationDto;
-import com.spring.app.rest.dto.organizationDto.OrganizationDtoOnlyNane;
-import com.spring.app.services.servicerOrganization.OrganizationService;
+import com.spring.app.rest.dto.organization.OrganizationDto;
+import com.spring.app.rest.dto.organization.OrganizationNameDto;
+import com.spring.app.services.organization.OrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -35,7 +35,7 @@ public class OrganizationController {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = OrganizationDtoOnlyNane.class)
+                                    schema = @Schema(implementation = OrganizationNameDto.class)
                             )
                     }
             ),
@@ -47,7 +47,7 @@ public class OrganizationController {
                     content = {@Content(schema = @Schema())})
     })
     @PostMapping ("/organizations")
-    public OrganizationDtoOnlyNane addOrganization (@RequestBody OrganizationDto formOrganization){
+    public OrganizationNameDto addOrganization (@RequestBody OrganizationDto formOrganization){
         return organizationService.addOrganization(formOrganization);
     }
 

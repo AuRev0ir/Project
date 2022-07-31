@@ -1,4 +1,4 @@
-package com.spring.app.configApp;
+package com.spring.app.configs;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;

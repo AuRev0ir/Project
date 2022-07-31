@@ -1,4 +1,4 @@
-package com.spring.app.rest.dto.employeeDto;
+package com.spring.app.rest.dto.employee;
 
 import com.spring.app.domain.Employee;
 import com.spring.app.domain.Organization;
