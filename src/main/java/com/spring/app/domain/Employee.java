@@ -10,28 +10,26 @@ public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_employee" )
+    @Column(name = "employee_id")
     private long id;
 
-    @Column(name = "name_employee", nullable = false)
+    @Column(nullable = false)
     private String firstName;
 
-    @Column(name = "surname_employee", nullable = false )
+    @Column(nullable = false )
     private String lastName;
 
-    @Column(name = "patronymic_employee", nullable = false)
     private String thirdName;
 
-    @Column(name = "job_title", nullable = false)
+    @Column(nullable = false)
     private String jobTitle;
 
-    @Column(name = "data_of_employment", nullable = false)
+    @Column(nullable = false)
     private LocalDate hireDate;
 
     @ManyToOne(targetEntity = Organization.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
-
 
     public Employee() {}
 

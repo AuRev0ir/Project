@@ -145,7 +145,7 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
                 .collect(Collectors.toSet());
 
 
-        // Если у User нету Roles, то очищаем БД
+        // Если у User нету Roles, то очищаем БД иначе сохраняем
         if(allRoles.isEmpty()){
             userRepository.delete(user);
         } else {

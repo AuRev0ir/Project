@@ -170,20 +170,25 @@ databaseChangeLog:
         - insert:
             columns:
               - column:
-                  name: name_employee
-                  value: ivan
+                  name: first_name
+                  value: Alexander
+
               - column:
-                  name: surname_employee
-                  value: ivan
+                  name: last_name
+                  value: Kuznetsov
+
               - column:
-                  name: patronymic_employee
-                  value: ivano
+                  name: third_name
+                  value: Edouardovich
+
               - column:
                   name: job_title
                   value: engineer
+
               - column:
-                  name: data_of_employment
-                  value: '2020-06-26'
+                  name: hire_date
+                  value: '2020-07-26'
+
               - column:
                   name: organization_id
                   value: 1
@@ -197,20 +202,21 @@ databaseChangeLog:
         - insert:
             columns:
               - column:
-                  name: name_employee
-                  value: oleg
+                  name: first_name
+                  value: Denis
+
               - column:
-                  name: surname_employee
-                  value: oleg
-              - column:
-                  name: patronymic_employee
-                  value: oleg
+                  name: last_name
+                  value: Chistovich
+
               - column:
                   name: job_title
                   value: engineer
+
               - column:
-                  name: data_of_employment
-                  value: '2000-06-26'
+                  name: hire_date
+                  value: '2000-05-17'
+
               - column:
                   name: organization_id
                   value: 2
@@ -224,20 +230,25 @@ databaseChangeLog:
         - insert:
             columns:
               - column:
-                  name: name_employee
-                  value: nikita
+                  name: first_name
+                  value: Roman
+
               - column:
-                  name: surname_employee
-                  value: nikita
+                  name: last_name
+                  value: Tatishev
+
               - column:
-                  name: patronymic_employee
-                  value: nikita
+                  name: third_name
+                  value: Aleksandrovich
+
               - column:
                   name: job_title
                   value: engineer
+
               - column:
-                  name: data_of_employment
-                  value: '2022-06-26'
+                  name: hire_date
+                  value: '1999-03-28'
+
               - column:
                   name: organization_id
                   value: 2

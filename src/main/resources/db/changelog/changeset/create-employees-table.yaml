@@ -7,7 +7,7 @@ databaseChangeLog:
             tableName: employees
             columns:
               - column:
-                  name: id_employee
+                  name: employee_id
                   type: bigint
                   autoIncrement: true
                   constraints:
@@ -15,22 +15,20 @@ databaseChangeLog:
                     nullable: false
 
               - column:
-                  name: name_employee
+                  name: first_name
                   type: varchar(200)
                   constraints:
                     nullable: false
 
               - column:
-                  name: surname_employee
+                  name: last_name
                   type: varchar(200)
                   constraints:
                     nullable: false
 
               - column:
-                  name: patronymic_employee
+                  name: third_name
                   type: varchar(200)
-                  constraints:
-                    nullable: false
 
               - column:
                   name: job_title
@@ -38,7 +36,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: data_of_employment
+                  name: hire_date
                   type: date
                   constraints:
                     nullable: false
