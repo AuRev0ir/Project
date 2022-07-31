@@ -18,7 +18,6 @@ databaseChangeLog:
                   type: varchar(200)
                   constraints:
                     unique: true
-#                    uniqueConstraintName: UniqueNameUser
                     nullable: false
 
 
