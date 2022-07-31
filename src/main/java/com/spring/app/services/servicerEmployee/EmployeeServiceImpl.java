@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -28,73 +29,82 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeDto updateEmployee(EmployeeDto dto, String name, Long idEmployee) {
+    public EmployeeDto updateEmployee(EmployeeDto dto, String name, Long id) {
 
-        boolean isSuccessfully = false;
 
-        Employee editingEmployee = employeeRepository.findById(idEmployee).orElseThrow(RepositoryException::new);
-        List<Employee> employeeList = employeeRepository.newMethodSortedPlus(name);
-        for (Employee employee : employeeList) {
-            if (Objects.equals(employee.getId(),idEmployee)) {
-                if (!Objects.equals(employee.getFirstName(),dto.getFirstName())){
-                    editingEmployee.setFirstName(dto.getFirstName());
-                }
-                if (!Objects.equals(employee.getLastName(), dto.getLastName())){
-                    editingEmployee.setLastName(dto.getLastName());
-                }
-                if(!Objects.equals(employee.getThirdName(),dto.getThirdName())){
-                    editingEmployee.setThirdName(dto.getThirdName());
-                }
-                if(!Objects.equals(employee.getJobTitle(),dto.getJobTitle())){
-                    editingEmployee.setJobTitle(dto.getJobTitle());
-                }
-                if(!Objects.equals(employee.getHireDate(),dto.getHireDate())){
-                    editingEmployee.setHireDate(dto.getHireDate());
-                }
+        Organization organizationFromTheRepository  = organizationRepository.findByName(name)
+                .orElseThrow(RepositoryException::new);
 
-                isSuccessfully = true;
-            }
+        // Если employee существует, то получим его id, в ином случае получаем исключения
+        Long idUpdatedEmployee = employeeRepository.newMethodSortedPlus(organizationFromTheRepository.getName())
+                .stream()
+                .filter(employee -> Objects.equals(employee.getId(), id))
+                .findFirst().map(Employee::getId)
+                .orElseThrow(ServiceException::new);
+
+        // Получаем Employee с Repository
+        Employee employeeFromTheRepository  = employeeRepository.findById(idUpdatedEmployee)
+                .orElseThrow(RepositoryException::new);
+
+        // Update Employee
+        if(!Objects.equals(employeeFromTheRepository.getFirstName(),dto.getFirstName())){
+            employeeFromTheRepository.setFirstName(dto.getFirstName());
+        }
+        if(!Objects.equals(employeeFromTheRepository.getLastName(),dto.getLastName())){
+            employeeFromTheRepository.setLastName(dto.getLastName());
+        }
+        if(!Objects.equals(employeeFromTheRepository.getThirdName(),dto.getThirdName())){
+            employeeFromTheRepository.setThirdName(dto.getThirdName());
+        }
+        if(!Objects.equals(employeeFromTheRepository.getJobTitle(),dto.getJobTitle())){
+            employeeFromTheRepository.setJobTitle(dto.getJobTitle());
+        }
+        if (!Objects.equals(employeeFromTheRepository.getHireDate(),dto.getHireDate())){
+            employeeFromTheRepository.setHireDate(dto.getHireDate());
         }
 
-        if (!isSuccessfully){
-            throw new ServiceException();
-        }
-        employeeRepository.save(editingEmployee);
-        return EmployeeDto.toDto(editingEmployee);
+        return EmployeeDto.toDto(
+                employeeRepository.save(employeeFromTheRepository));
     }
 
     @Override
     public EmployeeDtoOnlyId addEmployee(EmployeeDto dto, String name) {
-        Organization organizationById = organizationRepository.findByName(name)
+        Organization organizationFromTheRepository = organizationRepository.findByName(name)
                 .orElseThrow(RepositoryException::new);
-        Employee newEmployee = EmployeeDto.toDomainObject(dto, organizationById);
-        employeeRepository.save(newEmployee);
-        return EmployeeDtoOnlyId.toDto(newEmployee);
+        return EmployeeDtoOnlyId.toDto(
+                employeeRepository.save(EmployeeDto.toDomainObject(
+                        dto, organizationFromTheRepository)));
     }
 
     @Override
     public List<EmployeeDto> getEmployees(String name) {
-        Organization organization = organizationRepository.findByName(name).orElseThrow(RepositoryException::new);
+        Organization organizationFromTheRepository = organizationRepository.findByName(name)
+                .orElseThrow(RepositoryException::new);
         return employeeRepository
-                .newMethodSortedPlus(name)
+                .newMethodSortedPlus(organizationFromTheRepository.getName())
                 .stream()
                 .map(EmployeeDto::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public String removeEmployee(String name, Long idEmployee) {
-        boolean isSuccessfully = false;
-        List<Employee> employeeList = employeeRepository.newMethodSortedPlus(name);
-        for (Employee employee : employeeList) {
-            if(Objects.equals(employee.getId(), idEmployee)){
-                employeeRepository.newMethodDeleteEmployeeById(idEmployee);
-                isSuccessfully = true;
-            }
-        }
-        if (!isSuccessfully){
-            throw new ServiceException(); // 500 ошибка
-        }
+    public String removeEmployee(String name, Long id) {
+
+        Employee employeeFromTheRepository = employeeRepository.findById(id)
+                .orElseThrow(RepositoryException::new);
+        Organization organizationFromTheRepository = organizationRepository.findByName(name)
+                .orElseThrow(RepositoryException::new);
+        
+        Long employeeId = employeeRepository.newMethodSortedPlus(organizationFromTheRepository.getName())
+                .stream()
+                .filter(employee -> Objects.equals(employee.getId(),employeeFromTheRepository.getId()))
+                .findFirst()
+                .map(Employee::getId)
+                .orElseThrow(ServiceException::new);
+
+        employeeRepository.newMethodDeleteEmployeeById(employeeId);
+        
         return "Employee successfully deleted";
+
     }
 }

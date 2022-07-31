@@ -5,14 +5,15 @@ import com.spring.app.domain.Organization;
 import com.spring.app.exception.RepositoryException;
 import com.spring.app.exception.ServiceException;
 import com.spring.app.repository.dataJpa.OrganizationRepository;
-import com.spring.app.repository.nativeQuery.OrganizationNativeQueryRepository;
 import com.spring.app.rest.dto.organizationDto.OrganizationDto;
 import com.spring.app.rest.dto.organizationDto.OrganizationDtoOnlyNane;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 @Service
 public class OrganizationServiceImpl implements OrganizationService{
@@ -27,27 +28,36 @@ public class OrganizationServiceImpl implements OrganizationService{
     @Override
     public OrganizationDto updateOrganization(OrganizationDto dto , String name) {
 
-        Organization editingOrganizations = organizationRepository.findByName(name).orElseThrow(RepositoryException::new);
-        if(!Objects.equals(editingOrganizations.getName(),dto.getName())){
-            editingOrganizations.setName(dto.getName());
+        Organization organizationFromTheRepository  = organizationRepository.findByName(name)
+                .orElseThrow(RepositoryException::new);
 
+        if(!Objects.equals(organizationFromTheRepository.getName(),dto.getName())){
+            organizationFromTheRepository.setName(dto.getName());
         }
-        if(!Objects.equals(editingOrganizations.getDescription(),dto.getDescription())){
-            editingOrganizations.setDescription(dto.getDescription());
+        if(!Objects.equals(organizationFromTheRepository.getDescription(),dto.getDescription())){
+            organizationFromTheRepository.setDescription(dto.getDescription());
+        }
+        if(!Objects.equals(organizationFromTheRepository.getRating(),dto.getRating())){
+            organizationFromTheRepository.setRating(dto.getRating());
+        }
 
-        }
-        if(!Objects.equals(editingOrganizations.getRating(),dto.getRating())){
-            editingOrganizations.setRating(dto.getRating());
-
-        }
-        organizationRepository.save(editingOrganizations);
-        return OrganizationDto.toDto(editingOrganizations);
+        return OrganizationDto.toDto(
+                organizationRepository.save(organizationFromTheRepository));
     }
 
     @Override
     public OrganizationDtoOnlyNane addOrganization(OrganizationDto dto) {
-        Organization newOrganization = OrganizationDto.toDomainObject(dto);
-        return OrganizationDtoOnlyNane.toDto(organizationRepository.save(newOrganization));
+        Optional<Organization> organizationName = organizationRepository.findAll()
+                .stream()
+                .filter(organization -> Objects.equals(organization.getName(),dto.getName()))
+                .findFirst();
+
+        if(organizationName.isPresent()){
+            throw new ServiceException();
+        }
+
+        return OrganizationDtoOnlyNane.toDto(
+                organizationRepository.save(OrganizationDto.toDomainObject(dto)));
     }
 
     @Override
@@ -62,24 +72,14 @@ public class OrganizationServiceImpl implements OrganizationService{
 
     @Override
     public String removeOrganization(String name) {
-        boolean isSuccessfully = false;
 
-        List <Employee> deleteEmployee = organizationRepository.newMethodSortedPlus(name);
-        List<Organization> organizations = organizationRepository.findAll();
+        Organization organizationFromTheRepository  = organizationRepository.findByName(name)
+                .orElseThrow(RepositoryException::new);
 
-        for (Organization organization : organizations) {
-            if(Objects.equals(organization.getName(),name)){
-                for (Employee employee : deleteEmployee) {
-                    organizationRepository.newMethodDeleteEmployeeById(employee.getId());
-                }
-
-                organizationRepository.newMethodDeleteOrganizationById(name);
-                isSuccessfully = true;
-            }
-        }
-        if(!isSuccessfully){
-            throw new ServiceException();
-        }
+        List<Employee> remoteEmployees = organizationRepository.newMethodSortedPlus(organizationFromTheRepository.getName());
+        remoteEmployees
+                .forEach(employee -> organizationRepository.newMethodDeleteEmployeeById(employee.getId()));
+        organizationRepository.newMethodDeleteOrganizationByName(organizationFromTheRepository.getName());
 
         return "Organization successfully deleted";
     }

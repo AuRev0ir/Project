@@ -1,5 +1,6 @@
 package com.spring.app.services.serviceSecurity;
 
+
 import com.spring.app.domain.Role;
 import com.spring.app.domain.User;
 import com.spring.app.exception.CreateException;
@@ -50,16 +51,18 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
         Role roleNewUser = roleRepository.findByName("USER").orElseThrow(RepositoryException::new);
         rolesNewUser.add(roleNewUser);
 
-        List<User> usersList = userRepository.findAll();
+        Optional<User> userName = userRepository.findAll()
+                .stream()
+                .filter(organization -> Objects.equals(organization.getName(),userRegistrationDto.getName()))
+                .findFirst();
 
-        for (User user : usersList) {
-            if (Objects.equals(user.getName(), userRegistrationDto.getName())){
-                throw new CreateException();
-            }
+        // Если имя User уже существует
+        if(userName.isPresent()){
+            throw new CreateException();
         }
 
-        User newUser = UserRegistrationDto.toDomainObject(userRegistrationDto, rolesNewUser,bCryptPasswordEncoder.encode(userRegistrationDto.getPassword()));
-        userRepository.save(newUser);
+        userRepository.save(UserRegistrationDto.toDomainObject(
+                userRegistrationDto, rolesNewUser,bCryptPasswordEncoder.encode(userRegistrationDto.getPassword())));
 
         return "User successfully created";
     }
@@ -98,36 +101,22 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     @Override
     public String addUserRole(String newNameRole, String nameUser) {
 
-        boolean isSuccessfully1 = true;
-        boolean isSuccessfully2 = false;
-
-        Set<Role> roles = roleRepository.findAll();
-
         User user = userRepository.findByName(nameUser).orElseThrow(RepositoryException::new);
+        Role roleByName = roleRepository.findByName(newNameRole).orElseThrow(RepositoryException::new);
 
-        Set<Role> allRolesUser = user.getRoles();
 
-        for (Role role : roles) {
-            if(Objects.equals(role.getName(), newNameRole)){
-                for (Role roleUser : allRolesUser) {
-                    if(Objects.equals(roleUser.getName(),newNameRole)){
-                        isSuccessfully1 = false;
-                    }
-                }
-                allRolesUser.add(role);
-                user.setRoles(allRolesUser);
-                isSuccessfully2 = true;
-            }
-        }
+        // Проверка на наличие одинаковых ролей у User
+        Set<Role> sameRoles = user.getRoles()
+                .stream()
+                .filter(role -> Objects.equals(role.getName(), roleByName.getName()))
+                .collect(Collectors.toSet());
 
-        if (!isSuccessfully1){
+        if(!sameRoles.isEmpty()){
             throw new ServiceException();
         }
 
-        if (!isSuccessfully2){
-            throw new ServiceException();
-        }
-
+        // Если ошибок нет добавляем Role
+        user.getRoles().add(roleByName);
         userRepository.save(user);
 
         return nameUser + " given role " + newNameRole;
@@ -136,31 +125,33 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     @Override
     public String removeUserRole(String deleteRole, String nameUser) {
 
-        boolean isSuccessfully = false;
-
-        Set<Role> roles = roleRepository.findAll();
         User user = userRepository.findByName(nameUser).orElseThrow(RepositoryException::new);
+        Role roleByName = roleRepository.findByName(deleteRole).orElseThrow(RepositoryException::new);
 
-        Set<Role> allRolesUser = user.getRoles();
+        // Проверка на наличие роли, которую стоит удалить
+        Set<Role> roles = user.getRoles()
+                .stream()
+                .filter(role -> Objects.equals(role.getName(), roleByName.getName()))
+                .collect(Collectors.toSet());
 
-        for (Role role : roles) {
-            if(Objects.equals(role.getName(), deleteRole)){
-                for (Role userRole : allRolesUser) {
-                    if(Objects.equals(userRole.getName(),deleteRole)){
-                        allRolesUser.remove(userRole);
-                        user.setRoles(allRolesUser);
-                        System.out.println(allRolesUser);
-                        isSuccessfully = true;
-                    }
-                }
-            }
-        }
-
-        if (!isSuccessfully){
+        if(roles.isEmpty()){
             throw new ServiceException();
         }
 
-        userRepository.save(user);
+        // Обновляем Roles У User
+        Set<Role> allRoles = user.getRoles()
+                .stream()
+                .filter(role -> !Objects.equals(role.getName(),roleByName.getName()))
+                .collect(Collectors.toSet());
+
+
+        // Если у User нету Roles, то очищаем БД
+        if(allRoles.isEmpty()){
+            userRepository.delete(user);
+        } else {
+            user.setRoles(allRoles);
+            userRepository.save(user);
+        }
 
         return nameUser + " delete role " + deleteRole;
     }

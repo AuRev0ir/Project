@@ -58,39 +58,39 @@ public class RegistrationController {
 
     //Controller-ы  для тестирования БД
 
-    @Hidden
+
     @GetMapping("/users")
     public List<UserDto> allUsers(){
         return userDetailService.getUsers();
     }
 
-    @Hidden
+
     @DeleteMapping("/users")
     public ResponseEntity<String> deleteUser(@RequestParam String nameDeleteUser){
         return ResponseEntity.ok(userDetailService.removeUser(nameDeleteUser));
     }
 
-    @Hidden
+
     @GetMapping("/roles")
     public Set<RoleDto> allRoles (){
         return userDetailService.getRoles();
     }
 
 
-    @Hidden
+
     @PatchMapping("/users/addRole")
     public ResponseEntity<String> addRoleUser(@RequestParam String nameUser,
                               @RequestParam String newNameRole){
         return ResponseEntity.ok(userDetailService.addUserRole(newNameRole, nameUser));
     }
 
-    @Hidden
+
     @PatchMapping ("users/deleteRole")
     public ResponseEntity<String> removeRoleUser (@RequestParam String nameUser,
                                   @RequestParam String deleteNameRole){
         return ResponseEntity.ok(userDetailService.removeUserRole(deleteNameRole, nameUser));
     }
-    @Hidden
+
     @GetMapping("/users/userByName")
     public UserDto userByName(@RequestParam String userName){
         return userDetailService.getUserByName(userName);

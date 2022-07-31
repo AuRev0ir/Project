@@ -22,6 +22,6 @@ public interface JpqlNew {
     @Transactional
     @Modifying
     @Query(value = "DELETE FROM Organization s WHERE s.name = ?1 ")
-    void newMethodDeleteOrganizationById(String name);
+    void newMethodDeleteOrganizationByName(String name);
 
 }
