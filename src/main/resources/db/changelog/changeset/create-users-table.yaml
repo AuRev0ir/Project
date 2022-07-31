@@ -6,20 +6,19 @@ databaseChangeLog:
         - createTable:
             tableName: users
             columns:
-
               - column:
-                  name: id_user
+                  name: id
                   type: bigint
                   autoIncrement: true
                   constraints:
                     primaryKey: true
 
               - column:
-                  name: user_name
+                  name: name
                   type: varchar(200)
                   constraints:
                     unique: true
-                    uniqueConstraintName: UniqueNameUser
+#                    uniqueConstraintName: UniqueNameUser
                     nullable: false
 
 
@@ -30,13 +29,13 @@ databaseChangeLog:
                     nullable: false
 
               - column:
-                  name: user_email
+                  name: email
                   type: varchar(200)
                   constraints:
                     nullable: false
 
               - column:
-                  name: date_of_employment
+                  name: registration_date
                   type: date
                   constraints:
                     nullable: false

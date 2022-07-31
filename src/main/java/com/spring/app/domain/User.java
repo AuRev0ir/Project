@@ -11,25 +11,24 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column( name = "id_user")
     private Long id;
 
-    @Column(name = "user_name", unique = true)
+    @Column(unique = true, nullable = false)
     private String name;
 
-    @Column(name = "password")
+    @Column(nullable = false)
     private String password;
 
-    @Column(name = "user_email")
+    @Column(nullable = false)
     private String email;
 
-    @Column(name = "date_of_employment")
+    @Column(nullable = false)
     private LocalDate registrationDate;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
-            joinColumns =@JoinColumn(name = "users_id"),
-            inverseJoinColumns = @JoinColumn(name = "roles_id"))
+            joinColumns =@JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set <Role> roles;
 
     public User() {}

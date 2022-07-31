@@ -7,14 +7,15 @@ databaseChangeLog:
             tableName: roles
             columns:
               - column:
-                  name: id_role
+                  name: id
                   type: bigint
                   constraints:
                     primaryKey: true
 
               - column:
-                  name: name_role
+                  name: name
                   type: varchar(200)
                   constraints:
                     nullable: false
+                    unique: true
 

@@ -8,7 +8,7 @@ public class Organization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "organization_id", nullable = false)
+    @Column(name = "organization_id")
     private long id;
 
     @Column(nullable = false)

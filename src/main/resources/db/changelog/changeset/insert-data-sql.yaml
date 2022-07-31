@@ -6,11 +6,13 @@ databaseChangeLog:
         - insert:
             columns:
               - column:
-                  name: id_role
+                  name: id
                   value: 1
+
               - column:
-                  name: name_role
+                  name: name
                   value: ADMIN
+
             tableName: roles
 
   - changeSet:
@@ -20,11 +22,13 @@ databaseChangeLog:
         - insert:
             columns:
               - column:
-                  name: id_role
+                  name: id
                   value: 2
+
               - column:
-                  name: name_role
+                  name: name
                   value: USER
+
             tableName: roles
 
   - changeSet:
@@ -34,17 +38,21 @@ databaseChangeLog:
         - insert:
             columns:
               - column:
-                  name: user_name
+                  name: name
                   value: danil
+
               - column:
                   name: password
                   value: $2a$12$f5Ckq7.5jyYh5f0vOXtzdeg52tZyZ9HOQnyDPyHTwwVP2xbCD3rXa
+
               - column:
-                  name: user_email
+                  name: email
                   value: danil@email.ru
+
               - column:
-                  name: date_of_employment
+                  name: registration_date
                   value: '2020-06-26'
+
             tableName: users
 
   - changeSet:
@@ -54,11 +62,13 @@ databaseChangeLog:
         - insert:
             columns:
               - column:
-                  name: users_id
+                  name: user_id
                   value: 1
+
               - column:
-                  name: roles_id
+                  name: role_id
                   value: 2
+
             tableName: users_roles
 
   - changeSet:
@@ -68,17 +78,21 @@ databaseChangeLog:
         - insert:
             columns:
               - column:
-                  name: user_name
+                  name: name
                   value: anton
+
               - column:
                   name: password
                   value: $2a$12$.eBZbBRpaRDKmFmp8paSpOlo9pvK.X.K7Xy2F.tWSwZZBKbjSSjYq
+
               - column:
-                  name: user_email
+                  name: email
                   value: anton@email.ru
+
               - column:
-                  name: date_of_employment
+                  name: registration_date
                   value: '2020-06-26'
+
             tableName: users
 
   - changeSet:
@@ -88,11 +102,13 @@ databaseChangeLog:
         - insert:
             columns:
               - column:
-                  name: users_id
+                  name: user_id
                   value: 2
+
               - column:
-                  name: roles_id
+                  name: role_id
                   value: 1
+
             tableName: users_roles
 
   - changeSet:
@@ -102,17 +118,21 @@ databaseChangeLog:
         - insert:
             columns:
               - column:
-                  name: user_name
+                  name: name
                   value: igor
+
               - column:
                   name: password
                   value: $2a$12$n2SnnD5mqWAjkD7ytl6bu.y2JJWnMTq8prVHU1W7ArQxFzWtf9bDW
+
               - column:
-                  name: user_email
+                  name: email
                   value: igor@email.ru
+
               - column:
-                  name: date_of_employment
+                  name: registration_date
                   value: '2020-06-26'
+
             tableName: users
 
   - changeSet:
@@ -122,11 +142,13 @@ databaseChangeLog:
         - insert:
             columns:
               - column:
-                  name: users_id
+                  name: user_id
                   value: 3
+
               - column:
-                  name: roles_id
+                  name: role_id
                   value: 1
+
             tableName: users_roles
 
   - changeSet:
