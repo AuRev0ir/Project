@@ -1,4 +1,4 @@
-package com.spring.app.repository.jpql;
+package com.spring.app.repository.dataJpa;
 
 import com.spring.app.domain.Employee;
 import org.springframework.data.jpa.repository.Modifying;
@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface JpqlNew {
+public interface JpqlQueryRepository {
 
     @Query(value = "SELECT s FROM Employee s " +
             "WHERE s.organization.name = ?1 " +

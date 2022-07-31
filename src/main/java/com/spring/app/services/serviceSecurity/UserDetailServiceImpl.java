@@ -6,8 +6,8 @@ import com.spring.app.domain.User;
 import com.spring.app.exception.CreateException;
 import com.spring.app.exception.RepositoryException;
 import com.spring.app.exception.ServiceException;
-import com.spring.app.repository.security.RoleRepository;
-import com.spring.app.repository.security.UserRepository;
+import com.spring.app.repository.security.JpaRoleRepository;
+import com.spring.app.repository.security.JpaUserRepository;
 import com.spring.app.rest.dto.registrationDto.RoleDto;
 import com.spring.app.rest.dto.registrationDto.UserDto;
 import com.spring.app.rest.dto.registrationDto.UserRegistrationDto;
@@ -30,15 +30,15 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     private PasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    private UserRepository userRepository;
+    private JpaUserRepository jpaUserRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private JpaRoleRepository jpaRoleRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepository.findByName(username)
+        User user = jpaUserRepository.findByName(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
         return UserDetailsImpl.buildUserDetails(user);
     }
@@ -48,10 +48,10 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     public String addUser(UserRegistrationDto userRegistrationDto) {
 
         Set<Role>rolesNewUser = new HashSet<>();
-        Role roleNewUser = roleRepository.findByName("USER").orElseThrow(RepositoryException::new);
+        Role roleNewUser = jpaRoleRepository.findByName("USER").orElseThrow(RepositoryException::new);
         rolesNewUser.add(roleNewUser);
 
-        Optional<User> userName = userRepository.findAll()
+        Optional<User> userName = jpaUserRepository.findAll()
                 .stream()
                 .filter(organization -> Objects.equals(organization.getName(),userRegistrationDto.getName()))
                 .findFirst();
@@ -61,7 +61,7 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
             throw new CreateException();
         }
 
-        userRepository.save(UserRegistrationDto.toDomainObject(
+        jpaUserRepository.save(UserRegistrationDto.toDomainObject(
                 userRegistrationDto, rolesNewUser,bCryptPasswordEncoder.encode(userRegistrationDto.getPassword())));
 
         return "User successfully created";
@@ -69,7 +69,7 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public Set<RoleDto> getRoles() {
-        return roleRepository
+        return jpaRoleRepository
                 .findAll()
                 .stream()
                 .map(RoleDto::toDto)
@@ -78,7 +78,7 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public List<UserDto> getUsers() {
-        return userRepository
+        return jpaUserRepository
                 .findAll()
                 .stream()
                 .map(UserDto::toDto)
@@ -87,22 +87,22 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public UserDto getUserByName(String nameUser) {
-        User userByName = userRepository.findByName(nameUser).orElseThrow(RepositoryException::new);
+        User userByName = jpaUserRepository.findByName(nameUser).orElseThrow(RepositoryException::new);
         return UserDto.toDto(userByName);
     }
 
     @Override
     public String removeUser(String nameDeleteUser) {
-        User deleteUser = userRepository.findByName(nameDeleteUser).orElseThrow(RepositoryException::new);
-        userRepository.delete(deleteUser);
+        User deleteUser = jpaUserRepository.findByName(nameDeleteUser).orElseThrow(RepositoryException::new);
+        jpaUserRepository.delete(deleteUser);
         return "User: " + nameDeleteUser + " deleted successfully";
     }
 
     @Override
     public String addUserRole(String newNameRole, String nameUser) {
 
-        User user = userRepository.findByName(nameUser).orElseThrow(RepositoryException::new);
-        Role roleByName = roleRepository.findByName(newNameRole).orElseThrow(RepositoryException::new);
+        User user = jpaUserRepository.findByName(nameUser).orElseThrow(RepositoryException::new);
+        Role roleByName = jpaRoleRepository.findByName(newNameRole).orElseThrow(RepositoryException::new);
 
 
         // Проверка на наличие одинаковых ролей у User
@@ -117,7 +117,7 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
 
         // Если ошибок нет добавляем Role
         user.getRoles().add(roleByName);
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         return nameUser + " given role " + newNameRole;
     }
@@ -125,8 +125,8 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     @Override
     public String removeUserRole(String deleteRole, String nameUser) {
 
-        User user = userRepository.findByName(nameUser).orElseThrow(RepositoryException::new);
-        Role roleByName = roleRepository.findByName(deleteRole).orElseThrow(RepositoryException::new);
+        User user = jpaUserRepository.findByName(nameUser).orElseThrow(RepositoryException::new);
+        Role roleByName = jpaRoleRepository.findByName(deleteRole).orElseThrow(RepositoryException::new);
 
         // Проверка на наличие роли, которую стоит удалить
         Set<Role> roles = user.getRoles()
@@ -147,10 +147,10 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
 
         // Если у User нету Roles, то очищаем БД иначе сохраняем
         if(allRoles.isEmpty()){
-            userRepository.delete(user);
+            jpaUserRepository.delete(user);
         } else {
             user.setRoles(allRoles);
-            userRepository.save(user);
+            jpaUserRepository.save(user);
         }
 
         return nameUser + " delete role " + deleteRole;
