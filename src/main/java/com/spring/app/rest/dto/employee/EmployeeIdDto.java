@@ -1,6 +1,6 @@
 package com.spring.app.rest.dto.employee;
 
-import com.spring.app.domain.Employee;
+import com.spring.app.dao.model.Employee;
 
 public class EmployeeIdDto {
 

@@ -1,56 +1,39 @@
 package com.spring.app.rest.dto.security;
 
-import com.spring.app.domain.User;
+import com.spring.app.dao.model.User;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Setter
+@Getter
 public class UserDto {
 
-    private String name;
+    String name;
 
-    private String email;
+    String email;
 
-    private LocalDate registrationDate;
+    LocalDate registrationDate;
 
-    private Set<RoleDto> roles;
+    Set<RoleDto> roles;
 
-
-    public UserDto(String name,
-                   String email,
-                   LocalDate registrationDate,
-                   Set<RoleDto> roles) {
-        this.name = name;
-        this.email = email;
-        this.registrationDate = registrationDate;
-        this.roles = roles;
-    }
 
     public static UserDto toDto(User user){
         return new UserDto(
+
                 user.getName(),
                 user.getEmail(),
                 user.getRegistrationDate(),
-                user.getRoles().stream().map(role -> RoleDto.toDto(role)).collect(Collectors.toSet()));
-    }
-
-
-    //get
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public Set<RoleDto> getRoles() {
-        return roles;
+                user.getRoles().stream().map(RoleDto::toDto).collect(Collectors.toSet()));
     }
 
 }

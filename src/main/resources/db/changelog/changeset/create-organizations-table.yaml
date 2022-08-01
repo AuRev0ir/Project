@@ -7,7 +7,7 @@ databaseChangeLog:
             tableName: organizations
             columns:
               - column:
-                  name: organization_id
+                  name: id
                   type: bigint
                   autoIncrement: true
                   constraints:
@@ -20,12 +20,12 @@ databaseChangeLog:
                     nullable: false
 
               - column:
-                  name: organization_name
+                  name: name
                   type: varchar(200)
                   constraints:
                     unique: true
                     nullable: false
 
               - column:
-                  name: organization_description
+                  name: description
                   type: varchar(200)

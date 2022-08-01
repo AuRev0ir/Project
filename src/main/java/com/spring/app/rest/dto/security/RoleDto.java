@@ -1,20 +1,25 @@
 package com.spring.app.rest.dto.security;
 
-import com.spring.app.domain.Role;
+import com.spring.app.dao.model.Role;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
+
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Setter
+@Getter
 public class RoleDto {
-    private String role;
 
-    public RoleDto(String role) {
-        this.role = role;
-    }
+
+    String role;
 
     public static RoleDto toDto (Role role){
-        return new RoleDto(role.getName());
+        return new RoleDto(
+                role.getName());
     }
 
-    //get
-    public String getRole() {
-        return role;
-    }
 }

@@ -1,6 +1,6 @@
 package com.spring.app.rest.dto.organization;
 
-import com.spring.app.domain.Organization;
+import com.spring.app.dao.model.Organization;
 
 public class OrganizationNameDto {
 

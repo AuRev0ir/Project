@@ -3,30 +3,30 @@ package com.spring.app.rest.controller;
 
 import com.spring.app.rest.dto.employee.EmployeeDto;
 import com.spring.app.rest.dto.employee.EmployeeIdDto;
-import com.spring.app.services.employee.EmployeeService;
+import com.spring.app.service.employee.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Employee API")
+
+
 @RestController
+@RequestMapping("/employee")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EmployeeController {
 
-    private final EmployeeService employeeService;
-
-    public EmployeeController(EmployeeService employeeService) {
-        this.employeeService = employeeService;
-    }
-
-
+    EmployeeService employeeService;
 
     @Operation(summary = "Employee edit")
     @ApiResponses(value = {
@@ -47,11 +47,10 @@ public class EmployeeController {
             @ApiResponse(responseCode = "403", description = "Access blocked",
                     content = {@Content(schema = @Schema())})
     })
-    @PatchMapping("/organizations/{name}/employees/{idEmployee}")
-    public EmployeeDto editingEmployee (@PathVariable("name") String name,
-                                        @PathVariable("idEmployee") Long idEmployee,
-                                        @RequestBody EmployeeDto dto) {
-        return employeeService.updateEmployee(dto,name,idEmployee);
+    @PatchMapping("/{id}")
+    public EmployeeDto update (@PathVariable("id") Long id,
+                               @RequestBody EmployeeDto dto) {
+        return employeeService.update(dto, id);
     }
 
 
@@ -74,10 +73,9 @@ public class EmployeeController {
             @ApiResponse(responseCode = "403", description = "Access blocked",
                     content = {@Content(schema = @Schema())})
     })
-    @DeleteMapping("/organizations/{name}/employees/{idEmployee}")
-    public ResponseEntity<String> deleteEmployee(@PathVariable("name") String name,
-                                         @PathVariable("idEmployee") Long idEmployee){
-        return ResponseEntity.ok(employeeService.removeEmployee(name, idEmployee));
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> remove (@PathVariable("id") Long id) {
+        return ResponseEntity.ok(employeeService.remove(id));
     }
 
 
@@ -101,10 +99,10 @@ public class EmployeeController {
             @ApiResponse(responseCode = "403", description = "Access blocked",
                     content = {@Content(schema = @Schema())})
     })
-    @PostMapping("/organizations/{name}/employees")
-    public EmployeeIdDto addEmployee (@PathVariable("name") String name,
-                                      @RequestBody EmployeeDto formEmployee){
-        return employeeService.addEmployee(formEmployee, name);
+    @PostMapping("/{organizationName}")
+    public EmployeeIdDto create (@PathVariable("organizationName") String organizationName,
+                                 @RequestBody EmployeeDto dto) {
+        return employeeService.create(dto, organizationName);
     }
 
 
@@ -128,8 +126,8 @@ public class EmployeeController {
                     content = {@Content(schema = @Schema())})
 
     })
-    @GetMapping("/organizations/{name}")
-    public List<EmployeeDto> employeeList (@PathVariable("name") String name){
-        return employeeService.getEmployees(name);
+    @GetMapping("/{organizationName}")
+    public List<EmployeeDto> getAll (@PathVariable("organizationName") String organizationName){
+        return employeeService.getAll(organizationName);
     }
 }

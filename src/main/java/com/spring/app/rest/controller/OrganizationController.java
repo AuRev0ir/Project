@@ -3,29 +3,28 @@ package com.spring.app.rest.controller;
 
 import com.spring.app.rest.dto.organization.OrganizationDto;
 import com.spring.app.rest.dto.organization.OrganizationNameDto;
-import com.spring.app.services.organization.OrganizationService;
+import com.spring.app.service.organization.OrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Organization API")
 @RestController
+@RequestMapping("/organization")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OrganizationController {
 
-    private final OrganizationService organizationService;
-
-    public OrganizationController(OrganizationService organizationService) {
-        this.organizationService = organizationService;
-    }
-
+    OrganizationService organizationService;
 
     @Operation(summary = "Organization creation form")
     @ApiResponses(value = {
@@ -46,9 +45,9 @@ public class OrganizationController {
             @ApiResponse(responseCode = "403", description = "Access blocked",
                     content = {@Content(schema = @Schema())})
     })
-    @PostMapping ("/organizations")
-    public OrganizationNameDto addOrganization (@RequestBody OrganizationDto formOrganization){
-        return organizationService.addOrganization(formOrganization);
+    @PostMapping ()
+    public OrganizationNameDto create (@RequestBody OrganizationDto dto) {
+        return organizationService.create(dto);
     }
 
 
@@ -71,10 +70,10 @@ public class OrganizationController {
             @ApiResponse(responseCode = "403", description = "Access blocked",
                     content = {@Content(schema = @Schema())})
     })
-    @PatchMapping("/organizations/{name}")
-    public OrganizationDto editingOrganization (@PathVariable("name") String name,
-                                                @RequestBody OrganizationDto formOrganization){
-        return organizationService.updateOrganization(formOrganization, name);
+    @PatchMapping("/{name}")
+    public OrganizationDto update (@PathVariable("name") String name,
+                                   @RequestBody OrganizationDto dto) {
+        return organizationService.update(dto, name);
     }
 
 
@@ -96,9 +95,9 @@ public class OrganizationController {
             @ApiResponse(responseCode = "403", description = "Access blocked",
                     content = {@Content(schema = @Schema())})
     })
-    @DeleteMapping ("/organizations/{name}")
-    public ResponseEntity<String> deleteOrganization(@PathVariable("name") String name){
-        return ResponseEntity.ok(organizationService.removeOrganization(name));
+    @DeleteMapping ("/{name}")
+    public ResponseEntity<String> remove (@PathVariable("name") String name){
+        return ResponseEntity.ok(organizationService.remove(name));
     }
 
     @Operation(summary = "List of all organizations by rating")
@@ -120,8 +119,8 @@ public class OrganizationController {
             @ApiResponse(responseCode = "403", description = "Access blocked",
                     content = {@Content(schema = @Schema())})
     })
-    @GetMapping("/organizations")
-    public List<OrganizationDto> organizationList (){
-        return organizationService.getOrganizations();
+    @GetMapping()
+    public List<OrganizationDto> getAll (){
+        return organizationService.getAll();
     }
 }

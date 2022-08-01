@@ -1,36 +1,37 @@
 package com.spring.app.rest.dto.employee;
 
-import com.spring.app.domain.Employee;
-import com.spring.app.domain.Organization;
+import com.spring.app.dao.model.Employee;
+import com.spring.app.dao.model.Organization;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Setter
+@Getter
 public class EmployeeDto {
-    private String firstName;
 
-    private String lastName;
 
-    private String thirdName;
+    String firstName;
 
-    private String jobTitle;
+    String lastName;
 
-    private LocalDate hireDate;
+    String thirdName;
 
-    public EmployeeDto(
-                       String firstName,
-                       String lastName,
-                       String thirdName,
-                       String jobTitle,
-                       LocalDate hireDate) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.thirdName = thirdName;
-        this.jobTitle = jobTitle;
-        this.hireDate = hireDate;
-    }
+    String jobTitle;
+
+    LocalDate hireDate;
+
+
 
     public static EmployeeDto toDto(Employee employee) {
         return new EmployeeDto(
+
                 employee.getFirstName(),
                 employee.getLastName(),
                 employee.getThirdName(),
@@ -48,25 +49,4 @@ public class EmployeeDto {
                 organization);
     }
 
-    //get
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getThirdName() {
-        return thirdName;
-    }
-
-    public String getJobTitle() {
-        return jobTitle;
-    }
-
-    public LocalDate getHireDate() {
-        return hireDate;
-    }
 }

@@ -162,7 +162,7 @@ databaseChangeLog:
                   value: 3
 
               - column:
-                  name: organization_name
+                  name: name
                   value: Zavod-Tesla
 
             tableName: organizations
@@ -178,11 +178,11 @@ databaseChangeLog:
                   value: 6
 
               - column:
-                  name: organization_name
+                  name: name
                   value: Zavod-Mitsubishi-Electric
 
               - column:
-                  name: organization_description
+                  name: description
                   value: Satellite manufacturing
 
             tableName: organizations

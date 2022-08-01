@@ -1,29 +1,34 @@
 package com.spring.app.rest.dto.organization;
 
-import com.spring.app.domain.Organization;
+import com.spring.app.dao.model.Organization;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
+
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Setter
+@Getter
 public class OrganizationDto {
 
-    private String name;
 
-    private String description;
+    String name;
 
-    private Long rating;
+    String description;
+
+    Long rating;
 
 
-    public OrganizationDto(Long rating,
-                           String name,
-                           String description) {
-        this.rating = rating;
-        this.name = name;
-        this.description = description;
-    }
 
     public static OrganizationDto toDto (Organization organization){
         return new OrganizationDto(
-                organization.getRating(),
+
                 organization.getName(),
-                organization.getDescription());
+                organization.getDescription(),
+                organization.getRating());
     }
 
     public static Organization toDomainObject (OrganizationDto dto) {
@@ -31,19 +36,5 @@ public class OrganizationDto {
                 dto.getName(),
                 dto.getDescription(),
                 dto.getRating());
-    }
-
-    //get
-
-    public Long getRating() {
-        return rating;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
     }
 }
