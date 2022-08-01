@@ -2,9 +2,7 @@ package com.spring.app.services.employee;
 
 import com.spring.app.domain.Employee;
 import com.spring.app.domain.Organization;
-import com.spring.app.exception.CreateEntityException;
 import com.spring.app.exception.NotFoundEntityException;
-import com.spring.app.exception.UpdateEntityException;
 import com.spring.app.repository.employee.JpaEmployeeRepository;
 import com.spring.app.repository.organization.JpaOrganizationRepository;
 import com.spring.app.rest.dto.employee.EmployeeDto;

@@ -3,7 +3,7 @@ package com.spring.app.services.organization;
 import com.spring.app.domain.Employee;
 import com.spring.app.domain.Organization;
 import com.spring.app.exception.NotFoundEntityException;
-import com.spring.app.exception.CreateEntityException;
+import com.spring.app.exception.EntityNotCreatedException;
 import com.spring.app.repository.organization.JpaOrganizationRepository;
 import com.spring.app.rest.dto.organization.OrganizationDto;
 import com.spring.app.rest.dto.organization.OrganizationNameDto;
@@ -54,7 +54,7 @@ public class OrganizationServiceImpl implements OrganizationService{
                 .findFirst();
 
         if(organizationFromDB.isPresent()){
-            throw new CreateEntityException("This organization already exists");
+            throw new EntityNotCreatedException("This organization already exists");
         }
 
         return OrganizationNameDto.toDto(

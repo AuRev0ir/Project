@@ -3,8 +3,8 @@ package com.spring.app.services.security;
 
 import com.spring.app.domain.Role;
 import com.spring.app.domain.User;
-import com.spring.app.exception.CreateEntityException;
-import com.spring.app.exception.UpdateEntityException;
+import com.spring.app.exception.EntityNotCreatedException;
+import com.spring.app.exception.EntityNotUpdateException;
 import com.spring.app.exception.NotFoundEntityException;
 import com.spring.app.repository.security.JpaRoleRepository;
 import com.spring.app.repository.security.JpaUserRepository;
@@ -60,7 +60,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
 
         // Если имя User уже существует
         if(userName.isPresent()){
-            throw new CreateEntityException("This user already exists");
+            throw new EntityNotCreatedException("This user already exists");
         }
 
         jpaUserRepository.save(UserRegistrationDto.toDomainObject(
@@ -118,7 +118,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
                 .collect(Collectors.toSet());
 
         if(!rolesSame.isEmpty()){
-            throw new UpdateEntityException("User already has this role");
+            throw new EntityNotUpdateException("User already has this role");
         }
 
         // Если ошибок нет добавляем Role
@@ -143,7 +143,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
                 .collect(Collectors.toSet());
 
         if(rolesRemote.isEmpty()){
-            throw new UpdateEntityException("User already has this role removed");
+            throw new EntityNotUpdateException("User already has this role removed");
         }
 
         // Обновляем Roles У User

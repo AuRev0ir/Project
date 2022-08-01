@@ -1,8 +1,8 @@
 package com.spring.app.rest.errorHandler;
 
 
-import com.spring.app.exception.CreateEntityException;
-import com.spring.app.exception.UpdateEntityException;
+import com.spring.app.exception.EntityNotCreatedException;
+import com.spring.app.exception.EntityNotUpdateException;
 import com.spring.app.exception.NotFoundEntityException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +35,8 @@ public class ErrorHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(CreateEntityException.class)
-    public ResponseEntity<Object> handlerCreateEntityException(CreateEntityException ex){
+    @ExceptionHandler(EntityNotCreatedException.class)
+    public ResponseEntity<Object> handlerCreateEntityException(EntityNotCreatedException ex){
 
         Map<String, Object> body = new HashMap<>();
 
@@ -50,8 +50,8 @@ public class ErrorHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UpdateEntityException.class)
-    public ResponseEntity<Object> handlerUpdateEntityException(UpdateEntityException ex){
+    @ExceptionHandler(EntityNotUpdateException.class)
+    public ResponseEntity<Object> handlerUpdateEntityException(EntityNotUpdateException ex){
         Map<String, Object> body = new HashMap<>();
 
         body.put("error", "Entity Not Updated");
