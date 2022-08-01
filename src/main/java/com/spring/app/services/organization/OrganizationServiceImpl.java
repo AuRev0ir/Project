@@ -2,8 +2,8 @@ package com.spring.app.services.organization;
 
 import com.spring.app.domain.Employee;
 import com.spring.app.domain.Organization;
-import com.spring.app.exception.RepositoryException;
-import com.spring.app.exception.ServiceException;
+import com.spring.app.exception.NotFoundEntityException;
+import com.spring.app.exception.CreateEntityException;
 import com.spring.app.repository.organization.JpaOrganizationRepository;
 import com.spring.app.rest.dto.organization.OrganizationDto;
 import com.spring.app.rest.dto.organization.OrganizationNameDto;
@@ -28,7 +28,7 @@ public class OrganizationServiceImpl implements OrganizationService{
     public OrganizationDto updateOrganization(OrganizationDto dto , String name) {
 
         Organization organizationFromDB  = jpaOrganizationRepository.findByName(name)
-                .orElseThrow(RepositoryException::new);
+                .orElseThrow(() -> new NotFoundEntityException("Organization not found in database"));
 
         if(!Objects.equals(organizationFromDB.getName(),dto.getName())){
             organizationFromDB.setName(dto.getName());
@@ -54,7 +54,7 @@ public class OrganizationServiceImpl implements OrganizationService{
                 .findFirst();
 
         if(organizationFromDB.isPresent()){
-            throw new ServiceException();
+            throw new CreateEntityException("This organization already exists");
         }
 
         return OrganizationNameDto.toDto(
@@ -75,7 +75,7 @@ public class OrganizationServiceImpl implements OrganizationService{
     public String removeOrganization(String name) {
 
         Organization organizationFromDB  = jpaOrganizationRepository.findByName(name)
-                .orElseThrow(RepositoryException::new);
+                .orElseThrow(() -> new NotFoundEntityException("Organization not found in database"));
 
         List<Employee> remoteEmployees = jpaOrganizationRepository.sortEmployeeByOrganizationName(organizationFromDB.getName());
         remoteEmployees

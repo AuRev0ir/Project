@@ -1,28 +1,66 @@
 package com.spring.app.rest.errorHandler;
 
 
-import com.spring.app.exception.CreateException;
-import com.spring.app.exception.RepositoryException;
-import com.spring.app.exception.ServiceException;
+import com.spring.app.exception.CreateEntityException;
+import com.spring.app.exception.UpdateEntityException;
+import com.spring.app.exception.NotFoundEntityException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
 @ControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler(RepositoryException.class)
-    public ResponseEntity<String> handlerRepositoryException(RepositoryException ex){
-        return ResponseEntity.badRequest().body("RepositoryException: NOT FOUND");
+    private Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
+
+    @ExceptionHandler(NotFoundEntityException.class)
+    public ResponseEntity<Object> handlerNotFoundEntityException(NotFoundEntityException ex){
+
+        Map<String, Object> body = new HashMap<>();
+
+        body.put("error", "Entity Not Found" );
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+
+        String message = String.format("%s %s", LocalDateTime.now(), ex.getMessage());
+        logger.error(message);
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ServiceException.class)
-    public ResponseEntity<String> handlerServiceException(ServiceException ex){
-        return ResponseEntity.badRequest().body("ServiceException: SERVICE ERROR");
+    @ExceptionHandler(CreateEntityException.class)
+    public ResponseEntity<Object> handlerCreateEntityException(CreateEntityException ex){
+
+        Map<String, Object> body = new HashMap<>();
+
+        body.put("error", "Entity Not Created");
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+
+        String message = String.format("%s %s", LocalDateTime.now(), ex.getMessage());
+        logger.error(message);
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(CreateException.class)
-    public ResponseEntity<String> handlerCreateException(CreateException ex){
-        return ResponseEntity.badRequest().body("CreateException: ERROR WHILE CREATING");
+    @ExceptionHandler(UpdateEntityException.class)
+    public ResponseEntity<Object> handlerUpdateEntityException(UpdateEntityException ex){
+        Map<String, Object> body = new HashMap<>();
+
+        body.put("error", "Entity Not Updated");
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+
+        String message = String.format("%s %s", LocalDateTime.now(), ex.getMessage());
+        logger.error(message);
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 }

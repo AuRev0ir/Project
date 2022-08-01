@@ -2,8 +2,9 @@ package com.spring.app.services.employee;
 
 import com.spring.app.domain.Employee;
 import com.spring.app.domain.Organization;
-import com.spring.app.exception.RepositoryException;
-import com.spring.app.exception.ServiceException;
+import com.spring.app.exception.CreateEntityException;
+import com.spring.app.exception.NotFoundEntityException;
+import com.spring.app.exception.UpdateEntityException;
 import com.spring.app.repository.employee.JpaEmployeeRepository;
 import com.spring.app.repository.organization.JpaOrganizationRepository;
 import com.spring.app.rest.dto.employee.EmployeeDto;
@@ -33,18 +34,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
         Organization organizationFromDB  = jpaOrganizationRepository.findByName(organizationName)
-                .orElseThrow(RepositoryException::new);
+                .orElseThrow(() -> new NotFoundEntityException("Organization not found in database"));
 
         // Если employee существует, то получим его id, в ином случае получаем исключения
         Long id = jpaEmployeeRepository.sortEmployeeByOrganizationName(organizationFromDB.getName())
                 .stream()
                 .filter(employee -> Objects.equals(employee.getId(), employeeId))
                 .findFirst().map(Employee::getId)
-                .orElseThrow(ServiceException::new);
+                .orElseThrow(() -> new NotFoundEntityException(
+                        "Organization " + organizationFromDB.getName() + " does not have an employee with id: " + employeeId));
 
         // Получаем Employee с Repository
         Employee employeeFromDB  = jpaEmployeeRepository.findById(id)
-                .orElseThrow(RepositoryException::new);
+                .orElseThrow(() -> new NotFoundEntityException("Employee not found in database"));
 
         // Update Employee
         if(!Objects.equals(employeeFromDB.getFirstName(),dto.getFirstName())){
@@ -70,7 +72,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeIdDto addEmployee(EmployeeDto dto, String name) {
         Organization organizationFromDB = jpaOrganizationRepository.findByName(name)
-                .orElseThrow(RepositoryException::new);
+                .orElseThrow(() -> new NotFoundEntityException("Organization not found in database"));
         return EmployeeIdDto.toDto(
                 jpaEmployeeRepository.save(EmployeeDto.toDomainObject(
                         dto, organizationFromDB)));
@@ -79,7 +81,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<EmployeeDto> getEmployees(String name) {
         Organization organizationFromDB = jpaOrganizationRepository.findByName(name)
-                .orElseThrow(RepositoryException::new);
+                .orElseThrow(() -> new NotFoundEntityException("Organization not found in database"));
         return jpaEmployeeRepository
                 .sortEmployeeByOrganizationName(organizationFromDB.getName())
                 .stream()
@@ -91,16 +93,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     public String removeEmployee(String organizationName, Long employeeId) {
 
         Employee employeeFromDB = jpaEmployeeRepository.findById(employeeId)
-                .orElseThrow(RepositoryException::new);
+                .orElseThrow(() -> new NotFoundEntityException("Employee not found in database"));
         Organization organizationFromDB = jpaOrganizationRepository.findByName(organizationName)
-                .orElseThrow(RepositoryException::new);
+                .orElseThrow(() -> new NotFoundEntityException("Organization not found in database"));
         
         Long id = jpaEmployeeRepository.sortEmployeeByOrganizationName(organizationFromDB.getName())
                 .stream()
                 .filter(employee -> Objects.equals(employee.getId(),employeeFromDB.getId()))
                 .findFirst()
                 .map(Employee::getId)
-                .orElseThrow(ServiceException::new);
+                .orElseThrow(() -> new NotFoundEntityException(
+                        "Organization " + organizationFromDB.getName() + " does not have an employee with id: " + employeeId));
 
         jpaEmployeeRepository.removeEmployeeById(id);
         

@@ -3,9 +3,9 @@ package com.spring.app.services.security;
 
 import com.spring.app.domain.Role;
 import com.spring.app.domain.User;
-import com.spring.app.exception.CreateException;
-import com.spring.app.exception.RepositoryException;
-import com.spring.app.exception.ServiceException;
+import com.spring.app.exception.CreateEntityException;
+import com.spring.app.exception.UpdateEntityException;
+import com.spring.app.exception.NotFoundEntityException;
 import com.spring.app.repository.security.JpaRoleRepository;
 import com.spring.app.repository.security.JpaUserRepository;
 import com.spring.app.rest.dto.security.RoleDto;
@@ -48,7 +48,9 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     public String addUser(UserRegistrationDto dto) {
 
 
-        Role roleFromDB = jpaRoleRepository.findByName("USER").orElseThrow(RepositoryException::new);
+        Role roleFromDB = jpaRoleRepository.findByName("USER").orElseThrow(
+                () -> new NotFoundEntityException("Role USER not found in database")
+        );
         Set<Role>userRoles = Set.of(roleFromDB);
 
         Optional<User> userName = jpaUserRepository.findAll()
@@ -58,7 +60,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
 
         // Если имя User уже существует
         if(userName.isPresent()){
-            throw new CreateException();
+            throw new CreateEntityException("This user already exists");
         }
 
         jpaUserRepository.save(UserRegistrationDto.toDomainObject(
@@ -87,13 +89,15 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public UserDto getUserByName(String name) {
-        User userFromDB = jpaUserRepository.findByName(name).orElseThrow(RepositoryException::new);
+        User userFromDB = jpaUserRepository.findByName(name).orElseThrow(() -> new NotFoundEntityException(
+                "User not found in database"));
         return UserDto.toDto(userFromDB);
     }
 
     @Override
     public String removeUser(String name) {
-        User userFromDB = jpaUserRepository.findByName(name).orElseThrow(RepositoryException::new);
+        User userFromDB = jpaUserRepository.findByName(name).orElseThrow(() -> new NotFoundEntityException(
+                "User not found in database"));
         jpaUserRepository.delete(userFromDB);
         return "User: " + name + " deleted successfully";
     }
@@ -101,8 +105,10 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     @Override
     public String addUserRole(String roleName, String userName) {
 
-        User userFromDB = jpaUserRepository.findByName(userName).orElseThrow(RepositoryException::new);
-        Role roleFromDB = jpaRoleRepository.findByName(roleName).orElseThrow(RepositoryException::new);
+        User userFromDB = jpaUserRepository.findByName(userName).orElseThrow(() -> new NotFoundEntityException(
+                "User not found in database"));
+        Role roleFromDB = jpaRoleRepository.findByName(roleName).orElseThrow(() -> new NotFoundEntityException(
+                "Role not found in database"));
 
 
         // Проверка на наличие одинаковых ролей у User
@@ -112,7 +118,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
                 .collect(Collectors.toSet());
 
         if(!rolesSame.isEmpty()){
-            throw new ServiceException();
+            throw new UpdateEntityException("User already has this role");
         }
 
         // Если ошибок нет добавляем Role
@@ -125,8 +131,10 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     @Override
     public String removeUserRole(String roleName, String userName) {
 
-        User userFromDB = jpaUserRepository.findByName(userName).orElseThrow(RepositoryException::new);
-        Role roleFromDB = jpaRoleRepository.findByName(roleName).orElseThrow(RepositoryException::new);
+        User userFromDB = jpaUserRepository.findByName(userName).orElseThrow(() -> new NotFoundEntityException(
+                "User not found in database"));
+        Role roleFromDB = jpaRoleRepository.findByName(roleName).orElseThrow(() -> new NotFoundEntityException(
+                "Role not found in database"));
 
         // Проверка на наличие роли, которую стоит удалить
         Set<Role> rolesRemote = userFromDB.getRoles()
@@ -135,7 +143,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
                 .collect(Collectors.toSet());
 
         if(rolesRemote.isEmpty()){
-            throw new ServiceException();
+            throw new UpdateEntityException("User already has this role removed");
         }
 
         // Обновляем Roles У User
