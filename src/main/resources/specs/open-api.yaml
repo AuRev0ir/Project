@@ -1,0 +1,328 @@
+openapi: 3.0.1
+info:
+  title: API
+  description: Test swagger
+  contact:
+    name: Danil
+    url: https://myWebsite.ru
+    email: myEmail@email.ru
+  license:
+    name: Apache 2.0
+  version: 2.0.0
+servers:
+- url: http://localhost:8080
+  description: Main server
+- url: http://localhost:8081
+  description: Spare server
+paths:
+  /registration:
+    post:
+      tags:
+      - registration-controller
+      summary: User registration
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistrationDto'
+        required: true
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+        "200":
+          description: Successful operation
+          content:
+            '*/*':
+              schema:
+                type: string
+  /organization:
+    get:
+      tags:
+      - organization-controller
+      summary: List of all organizations by rating
+      operationId: getAll_2
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationDto'
+    post:
+      tags:
+      - organization-controller
+      summary: Organization creation form
+      operationId: create_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationFillFormDto'
+        required: true
+      responses:
+        "400":
+          description: Client Error
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationDto'
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+  /employee/{organizationName}:
+    get:
+      tags:
+      - employee-controller
+      summary: List of employees of the organization by date of employment
+      operationId: getAll_3
+      parameters:
+      - name: organizationName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmployeeDto'
+    post:
+      tags:
+      - employee-controller
+      summary: Employee creation form
+      operationId: create_2
+      parameters:
+      - name: organizationName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeFillFormDto'
+        required: true
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeDto'
+        "500":
+          description: An error occurred on the server
+
+  /organization/{name}:
+    delete:
+      tags:
+      - organization-controller
+      summary: Delete an organization with all employees
+      operationId: remove_1
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+        "200":
+          description: Successful operation
+          content:
+            '*/*':
+              schema:
+                type: string
+    patch:
+      tags:
+      - organization-controller
+      summary: Organization edit
+      operationId: update
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationFillFormDto'
+        required: true
+      responses:
+        "400":
+          description: Client Error
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationDto'
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+  /employee/{id}:
+    delete:
+      tags:
+      - employee-controller
+      summary: Delete an employee
+      operationId: remove_2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+        "200":
+          description: Successful operation
+          content:
+            '*/*':
+              schema:
+                type: string
+    patch:
+      tags:
+      - employee-controller
+      summary: Employee edit
+      operationId: update_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeFillFormDto'
+        required: true
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeDto'
+        "500":
+          description: An error occurred on the server
+
+components:
+  schemas:
+    UserRegistrationDto:
+      type: object
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+        registrationDate:
+          type: string
+          format: date
+    OrganizationFillFormDto:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        rating:
+          type: integer
+          format: int64
+    OrganizationDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        rating:
+          type: integer
+          format: int64
+    EmployeeFillFormDto:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        thirdName:
+          type: string
+        jobTitle:
+          type: string
+        hireDate:
+          type: string
+          format: date
+    EmployeeDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+        thirdName:
+          type: string
+        jobTitle:
+          type: string
+        hireDate:
+          type: string
+          format: date
+
+
