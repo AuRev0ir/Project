@@ -39,14 +39,18 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests()
+
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/v3/api-docs").permitAll()
-                .antMatchers(HttpMethod.PATCH,"/organizations/{idOrganization}")
+                .antMatchers(HttpMethod.POST,"/organization").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.PATCH,"/organization/{name}")
                 .hasAuthority("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/organizations/{idOrganization}")
+                .antMatchers(HttpMethod.DELETE, "/organizations/{name}")
                 .hasAuthority("ADMIN")
-                .antMatchers(HttpMethod.POST,"/apiAdmin/userRegistration").not().fullyAuthenticated()
-                .antMatchers("/apiAdmin/**").hasAuthority("ADMIN")
+                .antMatchers("/user/**").hasAuthority("ADMIN")
+                .antMatchers("/role/**").hasAuthority("ADMIN")
+                .antMatchers("/registration").not().fullyAuthenticated()
+
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic().authenticationEntryPoint(authenticationEntryPoint);
