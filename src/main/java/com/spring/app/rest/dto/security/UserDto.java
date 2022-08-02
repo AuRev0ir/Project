@@ -1,6 +1,7 @@
 package com.spring.app.rest.dto.security;
 
 import com.spring.app.dao.model.User;
+import com.spring.app.rest.mapper.RoleMapper;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,15 +26,5 @@ public class UserDto {
     LocalDate registrationDate;
 
     Set<RoleDto> roles;
-
-
-    public static UserDto toDto(User user){
-        return new UserDto(
-
-                user.getName(),
-                user.getEmail(),
-                user.getRegistrationDate(),
-                user.getRoles().stream().map(RoleDto::toDto).collect(Collectors.toSet()));
-    }
 
 }

@@ -1,25 +1,28 @@
-package com.spring.app.rest.dto.organization;
+package com.spring.app.rest.dto.employee;
 
-import com.spring.app.dao.model.Organization;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
-public class OrganizationDto {
+public class EmployeeFillFormDto {
 
-    Long id;
+    String firstName;
 
-    String name;
+    String lastName;
 
-    String description;
+    String thirdName;
 
-    Long rating;
+    String jobTitle;
+
+    LocalDate hireDate;
 
 }

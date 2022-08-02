@@ -1,8 +1,8 @@
 package com.spring.app.rest.controller;
 
 
+import com.spring.app.rest.dto.employee.EmployeeFillFormDto;
 import com.spring.app.rest.dto.employee.EmployeeDto;
-import com.spring.app.rest.dto.employee.EmployeeIdDto;
 import com.spring.app.service.employee.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -49,7 +49,7 @@ public class EmployeeController {
     })
     @PatchMapping("/{id}")
     public EmployeeDto update (@PathVariable("id") Long id,
-                               @RequestBody EmployeeDto dto) {
+                               @RequestBody EmployeeFillFormDto dto) {
         return employeeService.update(dto, id);
     }
 
@@ -88,7 +88,7 @@ public class EmployeeController {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = EmployeeIdDto.class)
+                                    schema = @Schema(implementation = EmployeeDto.class)
                             )
                     }
             ),
@@ -100,8 +100,8 @@ public class EmployeeController {
                     content = {@Content(schema = @Schema())})
     })
     @PostMapping("/{organizationName}")
-    public EmployeeIdDto create (@PathVariable("organizationName") String organizationName,
-                                 @RequestBody EmployeeDto dto) {
+    public EmployeeDto create (@PathVariable("organizationName") String organizationName,
+                                 @RequestBody EmployeeFillFormDto dto) {
         return employeeService.create(dto, organizationName);
     }
 

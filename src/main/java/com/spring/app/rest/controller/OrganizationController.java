@@ -2,7 +2,7 @@ package com.spring.app.rest.controller;
 
 
 import com.spring.app.rest.dto.organization.OrganizationDto;
-import com.spring.app.rest.dto.organization.OrganizationNameDto;
+import com.spring.app.rest.dto.organization.OrganizationFillFormDto;
 import com.spring.app.service.organization.OrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -34,7 +34,7 @@ public class OrganizationController {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = OrganizationNameDto.class)
+                                    schema = @Schema(implementation = OrganizationDto.class)
                             )
                     }
             ),
@@ -46,7 +46,7 @@ public class OrganizationController {
                     content = {@Content(schema = @Schema())})
     })
     @PostMapping ()
-    public OrganizationNameDto create (@RequestBody OrganizationDto dto) {
+    public OrganizationDto create (@RequestBody OrganizationFillFormDto dto) {
         return organizationService.create(dto);
     }
 
@@ -72,7 +72,7 @@ public class OrganizationController {
     })
     @PatchMapping("/{name}")
     public OrganizationDto update (@PathVariable("name") String name,
-                                   @RequestBody OrganizationDto dto) {
+                                   @RequestBody OrganizationFillFormDto dto) {
         return organizationService.update(dto, name);
     }
 

@@ -7,7 +7,8 @@ import com.spring.app.exception.NotFoundEntityException;
 import com.spring.app.exception.EntityNotCreatedException;
 import com.spring.app.dao.repository.organization.OrganizationRepository;
 import com.spring.app.rest.dto.organization.OrganizationDto;
-import com.spring.app.rest.dto.organization.OrganizationNameDto;
+import com.spring.app.rest.dto.organization.OrganizationFillFormDto;
+import com.spring.app.rest.mapper.OrganizationMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,7 +30,7 @@ public class OrganizationServiceImpl implements OrganizationService{
 
 
     @Override
-    public OrganizationDto update (OrganizationDto dto , String name) {
+    public OrganizationDto update (OrganizationFillFormDto dto , String name) {
 
         Organization organizationFromDB  = organizationRepository.findByName(name)
                 .orElseThrow(() -> new NotFoundEntityException("Organization not found in database"));
@@ -44,11 +45,11 @@ public class OrganizationServiceImpl implements OrganizationService{
             organizationFromDB.setRating(dto.getRating());
         }
 
-        return OrganizationDto.toDto(organizationRepository.save(organizationFromDB));
+        return OrganizationMapper.INSTANCE.toDto(organizationRepository.save(organizationFromDB));
     }
 
     @Override
-    public OrganizationNameDto create (OrganizationDto dto) {
+    public OrganizationDto create (OrganizationFillFormDto dto) {
 
         Optional<Organization> organizationFromDB = organizationRepository.findAll()
                 .stream()
@@ -59,8 +60,8 @@ public class OrganizationServiceImpl implements OrganizationService{
             throw new EntityNotCreatedException("This organization already exists");
         }
 
-        return OrganizationNameDto.toDto(
-                organizationRepository.save(OrganizationDto.toDomainObject(dto)));
+        return OrganizationMapper.INSTANCE.toDto(organizationRepository.save(
+                OrganizationMapper.INSTANCE.toDomainObject(dto)));
     }
 
     @Override
@@ -68,7 +69,7 @@ public class OrganizationServiceImpl implements OrganizationService{
         return organizationRepository
                 .sortOrganizationsByRating()
                 .stream()
-                .map(OrganizationDto::toDto)
+                .map(OrganizationMapper.INSTANCE::toDto)
                 .collect(Collectors.toList());
 
     }

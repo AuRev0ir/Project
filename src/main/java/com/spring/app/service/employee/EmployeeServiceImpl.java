@@ -5,8 +5,9 @@ import com.spring.app.dao.model.Organization;
 import com.spring.app.exception.NotFoundEntityException;
 import com.spring.app.dao.repository.employee.EmployeeRepository;
 import com.spring.app.dao.repository.organization.OrganizationRepository;
+import com.spring.app.rest.dto.employee.EmployeeFillFormDto;
 import com.spring.app.rest.dto.employee.EmployeeDto;
-import com.spring.app.rest.dto.employee.EmployeeIdDto;
+import com.spring.app.rest.mapper.EmployeeMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,7 +27,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     OrganizationRepository organizationRepository;
 
     @Override
-    public EmployeeDto update (EmployeeDto dto, Long id) {
+    public EmployeeDto update (EmployeeFillFormDto dto, Long id) {
 
         Employee employeeFromDB  = employeeRepository.findById(id)
                 .orElseThrow(() -> new NotFoundEntityException("Employee not found in database"));
@@ -47,16 +48,16 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeFromDB.setHireDate(dto.getHireDate());
         }
 
-        return EmployeeDto.toDto(employeeRepository.save(employeeFromDB));
+        return EmployeeMapper.INSTANCE.INSTANCE.toDto(employeeRepository.save(employeeFromDB));
     }
 
     @Override
-    public EmployeeIdDto create (EmployeeDto dto, String organizationName) {
+    public EmployeeDto create (EmployeeFillFormDto dto, String organizationName) {
         Organization organizationFromDB = organizationRepository.findByName(organizationName)
                 .orElseThrow(() -> new NotFoundEntityException("Organization not found in database"));
-        return EmployeeIdDto.toDto(
-                employeeRepository.save(EmployeeDto.toDomainObject(
-                        dto, organizationFromDB)));
+
+        return EmployeeMapper.INSTANCE.toDto(employeeRepository.save(
+                EmployeeMapper.INSTANCE.toDomainObject(dto, organizationFromDB)));
     }
 
     @Override
@@ -66,7 +67,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository
                 .findEmployeesByOrganizationName(organizationFromDB.getName())
                 .stream()
-                .map(EmployeeDto::toDto)
+                .map(EmployeeMapper.INSTANCE::toDto)
                 .collect(Collectors.toList());
     }
 

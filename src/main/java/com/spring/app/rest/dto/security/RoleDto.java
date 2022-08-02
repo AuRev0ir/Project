@@ -14,12 +14,6 @@ import lombok.experimental.FieldDefaults;
 @Getter
 public class RoleDto {
 
-
-    String role;
-
-    public static RoleDto toDto (Role role){
-        return new RoleDto(
-                role.getName());
-    }
+    String name;
 
 }

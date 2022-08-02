@@ -27,13 +27,4 @@ public class UserRegistrationDto {
 
     LocalDate registrationDate;
 
-
-    public static User toDomainObject (UserRegistrationDto dto, Set<Role> roles, String password) {
-        return new User(
-                dto.getName(),
-                password,
-                dto.getEmail(),
-                dto.getRegistrationDate(),
-                roles);
-    }
 }

@@ -11,10 +11,11 @@ import com.spring.app.dao.repository.security.UserRepository;
 import com.spring.app.rest.dto.security.RoleDto;
 import com.spring.app.rest.dto.security.UserDto;
 import com.spring.app.rest.dto.security.UserRegistrationDto;
+import com.spring.app.rest.mapper.RoleMapper;
+import com.spring.app.rest.mapper.UserMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -64,8 +65,8 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
             throw new EntityNotCreatedException("This user already exists");
         }
 
-        userRepository.save(UserRegistrationDto.toDomainObject(
-                dto, userRoles, bCryptPasswordEncoder.encode(dto.getPassword())));
+        userRepository.save(UserMapper.INSTANCE.toDomainObject(
+                dto,(bCryptPasswordEncoder.encode(dto.getPassword())), userRoles));
 
         return "User successfully created";
     }
@@ -75,24 +76,30 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
         return roleRepository
                 .findAll()
                 .stream()
-                .map(RoleDto::toDto)
+                .map(RoleMapper.INSTANCE::toDto)
                 .collect(Collectors.toSet());
     }
 
     @Override
     public List<UserDto> getAllUsers () {
+
+
         return userRepository
                 .findAll()
                 .stream()
-                .map(UserDto::toDto)
+                .map(user -> UserMapper.INSTANCE.toDto(user , user.getRoles().
+                        stream().map(RoleMapper.INSTANCE::toDto).collect(Collectors.toSet())))
                 .collect(Collectors.toList());
+
     }
 
     @Override
     public UserDto getUserByName (String name) {
         User userFromDB = userRepository.findByName(name)
                 .orElseThrow(() -> new NotFoundEntityException("User not found in database"));
-        return UserDto.toDto(userFromDB);
+
+        return UserMapper.INSTANCE.toDto(userFromDB, userFromDB.getRoles()
+                .stream().map(RoleMapper.INSTANCE::toDto).collect(Collectors.toSet()));
     }
 
     @Override

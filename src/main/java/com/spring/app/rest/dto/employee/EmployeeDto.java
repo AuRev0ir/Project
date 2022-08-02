@@ -16,6 +16,7 @@ import java.time.LocalDate;
 @Getter
 public class EmployeeDto {
 
+    Long id;
 
     String firstName;
 
@@ -26,27 +27,5 @@ public class EmployeeDto {
     String jobTitle;
 
     LocalDate hireDate;
-
-
-
-    public static EmployeeDto toDto(Employee employee) {
-        return new EmployeeDto(
-
-                employee.getFirstName(),
-                employee.getLastName(),
-                employee.getThirdName(),
-                employee.getJobTitle(),
-                employee.getHireDate());
-    }
-
-    public static Employee toDomainObject (EmployeeDto dto, Organization organization) {
-        return new Employee(
-                dto.getFirstName(),
-                dto.getLastName(),
-                dto.getThirdName(),
-                dto.getJobTitle(),
-                dto.getHireDate(),
-                organization);
-    }
 
 }
