@@ -1,21 +1,28 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/changeset/create-organizations-table.yaml
+      file: changeset/create-organizations-table.yaml
+      relativeToChangelogFile: true
 
   - include :
-      file: db/changelog/changeset/create-employees-table.yaml
+      file: changeset/create-employees-table.yaml
+      relativeToChangelogFile: true
 
   - include:
-      file: db/changelog/changeset/create-roles-table.yaml
+      file: changeset/create-roles-table.yaml
+      relativeToChangelogFile: true
 
   - include:
-      file: db/changelog/changeset/create-users-table.yaml
+      file: changeset/create-users-table.yaml
+      relativeToChangelogFile: true
 
   - include:
-      file: db/changelog/changeset/create-users_roles-table.yaml
+      file: changeset/create-users_roles-table.yaml
+      relativeToChangelogFile: true
 
   - include:
-      file: db/changelog/changeset/insert-data-sql.yaml
+      file: changeset/insert-data-sql.yaml
+      relativeToChangelogFile: true
 
-
-
+  - include:
+      file: changeset/create-sequences.yaml
+      relativeToChangelogFile: true

@@ -1,11 +1,10 @@
-package com.spring.app.dao.repository.employee;
+package com.spring.app.dao.repository;
 
 import com.spring.app.dao.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.util.List;
 
@@ -21,6 +20,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>{
     @Query(value = "DELETE FROM Employee s WHERE s.id = ?1 ")
     void removeEmployeeById(Long id);
 
-    List<Employee> findAll();
-
+    void deleteAllByOrganization_Id(Long organizationId);
 }

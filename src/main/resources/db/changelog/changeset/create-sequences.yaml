@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-sequences
+      author: Anton Ilin
+      changes:
+        - createSequence:
+            schemaName: public
+            incrementBy: 1
+            sequenceName: roles_id_seq
+            startValue: 3
+        - createSequence:
+            schemaName: public
+            incrementBy: 1
+            sequenceName: users_id_seq
+            startValue: 4
+        - createSequence:
+            schemaName: public
+            incrementBy: 1
+            sequenceName: organizations_id_seq
+            startValue: 3
+        - createSequence:
+            schemaName: public
+            incrementBy: 1
+            sequenceName: employees_id_seq
+            startValue: 4

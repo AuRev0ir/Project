@@ -1,39 +1,36 @@
 package com.spring.app.rest.controller;
 
-
-import com.spring.app.rest.dto.security.RoleDto;
-import com.spring.app.service.security.UserService;
+import com.spring.app.rest.dto.RoleDto;
+import com.spring.app.service.RoleService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
-@RequestMapping("/role")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class RoleController {
+public class RoleController implements RoleApi {
 
-    UserService userService;
+    RoleService roleService;
 
-    @GetMapping()
-    public Set<RoleDto> getAll (){
-        return userService.getAllRoles();
+    @Override
+    public ResponseEntity<Long> addRole(RoleDto role) {
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(roleService.addNewRole(role));
     }
 
-    @PatchMapping("/addRole")
-    public ResponseEntity<String> addUserRole (@RequestParam String nameUser,
-                                               @RequestParam String nameRole){
-        return ResponseEntity.ok(userService.addUserRole(nameRole, nameUser));
+    @Override
+    public ResponseEntity<Void> deleteRole(String name) {
+        roleService.deleteRole(name);
+        return ResponseEntity.noContent().build();
     }
 
-
-    @PatchMapping ("/removeRole")
-    public ResponseEntity<String> removeUserRole (@RequestParam String nameUser,
-                                                  @RequestParam String nameRole){
-        return ResponseEntity.ok(userService.removeUserRole(nameRole, nameUser));
+    @Override
+    public ResponseEntity<List<RoleDto>> getAllRoles() {
+        return ResponseEntity.ok(roleService.getAllRoles());
     }
 }

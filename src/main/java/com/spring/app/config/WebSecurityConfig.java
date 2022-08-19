@@ -1,8 +1,7 @@
 package com.spring.app.config;
 
 import com.spring.app.config.basic.MyBasicAuthenticationEntryPoint;
-import com.spring.app.service.security.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,16 +13,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-
 @EnableWebSecurity
 @Configuration
+@RequiredArgsConstructor
 public class WebSecurityConfig {
-
-    @Autowired
-    private UserDetailsServiceImpl userDetailService;
-
-    @Autowired
-    private MyBasicAuthenticationEntryPoint authenticationEntryPoint;
+    private final MyBasicAuthenticationEntryPoint authenticationEntryPoint;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -33,7 +27,6 @@ public class WebSecurityConfig {
     public AuthenticationManager authenticationManager (AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
 
     @Bean
     public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {

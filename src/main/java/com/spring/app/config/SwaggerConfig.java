@@ -1,37 +1,26 @@
 package com.spring.app.config;
 
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Contact;
-import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.info.License;
-import io.swagger.v3.oas.models.servers.Server;
+import org.springdoc.core.SpringDocConfigProperties;
+import org.springdoc.core.SpringDocConfiguration;
+import org.springdoc.core.providers.ObjectMapperProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
-
 
 @Configuration
 public class SwaggerConfig {
 
+    @Bean
+    SpringDocConfiguration springDocConfiguration(){
+        return new SpringDocConfiguration();
+    }
 
     @Bean
-    public OpenAPI myOpenAPI(){
-        return new OpenAPI().info(new Info()
-                .title("API"). license(new License().name("Apache 2.0"))
-                .version("2.0.0")
-                .description("Test swagger")
-                .contact(new Contact()
-                        .name("Danil")
-                        .email("myEmail@email.ru")
-                        .url("https://myWebsite.ru")
-                ))
-                .servers(List.of(
-                        new Server().url("http://localhost:8080")
-                        .description("Main server"),
-                        new Server().url("http://localhost:8081")
-                        .description("Spare server"))
-                );
+    SpringDocConfigProperties springDocConfigProperties() {
+        return new SpringDocConfigProperties();
+    }
 
+    @Bean
+    ObjectMapperProvider objectMapperProvider(SpringDocConfigProperties springDocConfigProperties){
+        return new ObjectMapperProvider(springDocConfigProperties);
     }
 }

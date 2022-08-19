@@ -2,21 +2,23 @@ package com.spring.app.rest.mapper;
 
 
 import com.spring.app.dao.model.Employee;
-import com.spring.app.dao.model.Organization;
-import com.spring.app.rest.dto.employee.EmployeeFillFormDto;
-import com.spring.app.rest.dto.employee.EmployeeDto;
+import com.spring.app.rest.dto.EmployeeDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper
+@Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface EmployeeMapper {
 
-    EmployeeMapper INSTANCE = Mappers.getMapper(EmployeeMapper.class);
-
+    @Mapping(target = "middleName", source = "thirdName")
     EmployeeDto toDto (Employee employee);
 
+    @Mapping(source = "middleName", target = "thirdName")
     @Mapping(target = "id", ignore = true)
-    Employee toDomainObject (EmployeeFillFormDto dto, Organization organization);
+    Employee toEntity(EmployeeDto dto);
 
+    @Mapping(source = "middleName", target = "thirdName")
+    @Mapping(target = "id", ignore = true)
+    void updateFromDto(EmployeeDto employeeFillFormDto, @MappingTarget Employee employee);
 }

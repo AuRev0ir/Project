@@ -1,19 +1,25 @@
-spring:
-  main:
-    allow-circular-references: true
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    url: /open-api.yaml
+    show-extensions: true
+    show-common-extensions: true
+    try-it-out-enabled: true
 
+spring:
   liquibase:
     enabled: true
 
   datasource:
     url: jdbc:postgresql://localhost/spring
-    username: postgres
-    password: 1122
+    username: my_user
+    password: 123
 
   jpa:
-    generate-ddl: true
+    generate-ddl: false # Все таблицы должны быть созданы из миграций, а не автоматически
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
 
     properties:
       hibernate:

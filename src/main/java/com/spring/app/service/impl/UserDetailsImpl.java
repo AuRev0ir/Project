@@ -1,8 +1,9 @@
-package com.spring.app.service.security;
+package com.spring.app.service.impl;
 
 import com.spring.app.dao.model.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,20 +17,15 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
 public class UserDetailsImpl implements UserDetails {
 
     Long id;
-
-    String name;
-
+    String username;
     String email;
-
     LocalDate hireDate;
-
     String password;
-
     Collection<? extends GrantedAuthority> authorities;
-
 
     public static UserDetailsImpl buildUserDetails(User user){
 
@@ -47,33 +43,6 @@ public class UserDetailsImpl implements UserDetails {
                 user.getPassword(),
                 authorities
         );
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public LocalDate getHireDate() {
-        return hireDate;
     }
 
     @Override
