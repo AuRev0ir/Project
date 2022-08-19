@@ -1,20 +1,20 @@
 package com.spring.app.rest.mapper;
 
-
 import com.spring.app.dao.model.Organization;
-import com.spring.app.rest.dto.organization.OrganizationDto;
-import com.spring.app.rest.dto.organization.OrganizationFillFormDto;
+import com.spring.app.rest.dto.OrganizationDto;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper
+@Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface OrganizationMapper {
-
-    OrganizationMapper INSTANCE = Mappers.getMapper(OrganizationMapper.class);
 
     OrganizationDto toDto (Organization organization);
 
-    Organization toDomainObject (OrganizationFillFormDto dto);
+    @Mapping(target = "id", ignore = true)
+    Organization toEntity(OrganizationDto dto);
 
-
+    @Mapping(target = "id", ignore = true)
+    void updateFromDto(OrganizationDto organizationFillFormDto, @MappingTarget Organization organization);
 }

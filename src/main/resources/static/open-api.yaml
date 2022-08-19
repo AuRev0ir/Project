@@ -1,0 +1,747 @@
+openapi: 3.0.1
+info:
+  title: API
+  description: Test swagger
+  contact:
+    name: Danil
+    url: https://myWebsite.ru
+    email: myEmail@email.ru
+  license:
+    name: Apache 2.0
+  version: 2.0.0
+security:
+  - basicAuth: [ ]
+servers:
+  - url: http://localhost:8080
+    description: Main server
+  - url: http://localhost:8081
+    description: Spare server
+paths:
+  /users/new:
+    post:
+      tags:
+        - User
+      security:
+        - basicAuth: [ ]
+      summary: User registration
+      operationId: signUpUser
+      description: Adding new users to database
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistrationDto'
+        required: true
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+                description: Identifier of created user
+                example: 5436
+  /users:
+    get:
+      tags:
+        - User
+      security:
+        - basicAuth: [ ]
+      summary: Obtain list of all Users
+      description: Obtain list of all Users
+      operationId: getAllUsers
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PlainUserDto"
+
+  /users/{name}:
+    get:
+      tags:
+        - User
+      security:
+        - basicAuth: [ ]
+      summary: Obtain specific User by name
+      description: Obtain specific User by name
+      operationId: getUserByName
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        "200":
+          description: Data of user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlainUserDto"
+    delete:
+      tags:
+        - User
+      security:
+        - basicAuth: [ ]
+      summary: Delete specific User by name
+      description: Delete specific User by name
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: deleteUserByName
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        "204":
+          description: No Content
+
+  /user-roles:
+    put:
+      tags:
+        - User roles
+      security:
+        - basicAuth: [ ]
+      summary: Link specific role with user
+      description: Link specific role with user
+      operationId: linkRoleWithUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRolesDto"
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        "204":
+          description: No content
+    delete:
+      tags:
+        - User roles
+      security:
+        - basicAuth: [ ]
+      summary: Remove specific role of user
+      description: Remove specific role of user
+      operationId: deleteRoleOfUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRolesDto"
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        "204":
+          description: No content
+
+  /user-roles/{username}:
+    get:
+      tags:
+        - User roles
+      security:
+        - basicAuth: [ ]
+      summary: Obtain user's roles
+      description: Obtain user's roles
+      operationId: getLinkedRoles
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        "200":
+          description: List of roles that were linked with user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RoleDto"
+
+  /roles:
+    get:
+      tags:
+        - Role
+      security:
+        - basicAuth: [ ]
+      summary: Obtain all roles
+      description: Obtain all roles
+      operationId: getAllRoles
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        "200":
+          description: List of roles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RoleDto"
+    post:
+      tags:
+        - Role
+      security:
+        - basicAuth: [ ]
+      summary: Add new Role
+      description: Add new Role
+      operationId: addRole
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleDto"
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+                description: Identifier of created Role
+                example: 645343
+  /roles/{name}:
+    delete:
+      tags:
+        - Role
+      security:
+        - basicAuth: [ ]
+      summary: Delete specific Role
+      description: Delete specific Role
+      operationId: deleteRole
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        "204":
+          description: No content
+
+  /organizations:
+    get:
+      tags:
+        - Organization
+      security:
+        - basicAuth: [ ]
+      summary: Obtain list of all Organizations
+      description: Obtain list of all Organizations by rating
+      operationId: getAllWithRatingOrdering
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationDto'
+    post:
+      tags:
+        - Organization
+      security:
+        - basicAuth: [ ]
+      summary: Add new Organization
+      description: Add new Organization with data from request
+      operationId: addNewOrganization
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationDto'
+        required: true
+      responses:
+        "400":
+          description: Client Error
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+                description: Identifier of created Organization
+                example: 45322
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+
+  /organizations/{name}:
+    delete:
+      tags:
+        - Organization
+      security:
+        - basicAuth: [ ]
+      summary: Delete an Organization
+      description: Delete an Organization with all employees
+      operationId: deleteOrganization
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+        "204":
+          description: Successful operation
+    put:
+      tags:
+        - Organization
+      security:
+        - basicAuth: [ ]
+      summary: Update Organization data
+      description: Update data of Organization with name from request
+      operationId: updateOrganizationData
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Title of organization
+            example: Рога и копыта
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationDto'
+        required: true
+      responses:
+        "400":
+          description: Client Error
+        "204":
+          description: No content
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+
+  /employees/{organizationName}:
+    get:
+      tags:
+        - Employee
+      security:
+        - basicAuth: [ ]
+      summary: Obtain list of all employees
+      description: Obtain list of all employees of the organization with ordering by hiring date
+      operationId: getAllHiredEmployeesInOrganization
+      parameters:
+        - name: organizationName
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Title of organization
+            example: Рога и копыта
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmployeeDto'
+    post:
+      tags:
+        - Employee
+      security:
+        - basicAuth: [ ]
+      summary: Add new Employee
+      description: Add new Employee and linking to specific Organization
+      operationId: addNewEmployee
+      parameters:
+        - name: organizationName
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Title of organization
+            example: Рога и копыта
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeDto'
+        required: true
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+                description: Identifier of created Employee
+                example: 452342
+        "500":
+          description: An error occurred on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+
+  /employee/{id}:
+    delete:
+      tags:
+        - Employee
+      security:
+        - basicAuth: [ ]
+      summary: Delete an employee by id
+      description: Delete specific employee by identifier
+      operationId: deleteEmployeeById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            description: Identifier of employee
+            example: 45343
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "500":
+          description: An error occurred on the server
+        "204":
+          description: Successful operation
+
+    put:
+      tags:
+        - Employee
+      security:
+        - basicAuth: [ ]
+      summary: Update data of Employee
+      description: Updating data of Employee with data from request
+      operationId: updateEmployeeData
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            description: Identifier of employee
+            example: 45343
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeDto'
+        required: true
+      responses:
+        "400":
+          description: Client Error
+        "403":
+          description: Access blocked
+        "204":
+          description: Successful operation
+        "500":
+          description: An error occurred on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Basic authorization
+
+  schemas:
+    UserRegistrationDto:
+      type: object
+      description: Model contains data of new User
+      required:
+        - name
+        - password
+        - email
+      properties:
+        name:
+          type: string
+          description: Login if user
+          example: ivanovII
+        password:
+          type: string
+          description: Raw password value that will be encoded before saving in database
+          example: qwerty123456
+        email:
+          type: string
+          format: email
+          description: Email address of user
+
+    PlainUserDto:
+      type: object
+      description: Model contains data of User without password
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: string
+          description: Login if user
+          example: ivanovII
+        email:
+          type: string
+          format: email
+          description: Email address of user
+
+    RoleDto:
+      type: object
+      description: Model of role
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Identifier of role
+          example: 3423
+        name:
+          type: string
+          description: Name of role
+          example: USER
+
+    UserRolesDto:
+      type: object
+      description: Model contains data of user and it's roles
+      required:
+        - userId
+        - name
+        - roles
+      properties:
+        userId:
+          type: integer
+          format: int64
+          description: Identifier of user
+          example: 2342
+        name:
+          type: string
+          description: Unique name (login) of user
+          example: ivanovII
+        roles:
+          type: array
+          description: List of roles
+          items:
+            $ref: "#/components/schemas/RoleDto"
+
+    OrganizationDto:
+      type: object
+      description: Data of organization
+      required:
+        - name
+        - description
+        - rating
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Identifier of organization in application
+          example: 324
+        name:
+          type: string
+          description: Title of organization
+          example: Рога и Копыта
+        description:
+          type: string
+          description: Description of company activities
+          example: Продаем и покупаем рога и копыта
+        rating:
+          type: integer
+          format: int64
+          description: Rating score of organization
+          example: 123
+
+    EmployeeDto:
+      type: object
+      description: Data of employee
+      required:
+        - firstName
+        - lastName
+        - middleName
+        - jobTitle
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Identifier of employee in application
+          example: 395434
+        firstName:
+          type: string
+          description: First name of employee
+          example: Иван
+        lastName:
+          type: string
+          description: Last name of employee
+          example: Иванов
+        middleName:
+          type: string
+          description: Middle name of employee
+          example: Иванович
+        jobTitle:
+          type: string
+          description: Position of employee in organization
+          example: Продавец рогов и копыт
+        hireDate:
+          type: string
+          format: date
+          description: Date of hiring
+
+    ErrorDto:
+      type: object
+      description: Data of occurred Error
+      properties:
+        error:
+          type: string
+          description: Short description of Error
+          example: Entity Not Found
+        message:
+          type: string
+          description: Full description of Error
+          example: Ошибка возникла из-за того что были найдены копыты, но не найдено рогов
+        timestamp:
+          type: string
+          format: date-time
+          description: Date and time of Error occurrence
